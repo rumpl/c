@@ -20,7 +20,7 @@
       "url": "https://github.com/rumpl/c/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/cli",
+  "main": "bin/c",
   "engines": {
     "node": "~0.6.15"
   },
