@@ -21,6 +21,9 @@
     }
   ],
   "main": "bin/c",
+  "bin": {
+    "c": "bin/c"
+  },
   "engines": {
     "node": "~0.8.2"
   },
