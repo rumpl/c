@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+/*
+ * c
+ * https://github.com/rumpl/c
+ *
+ * Copyright (c) 2012 Djordje Lukic
+ * Licensed under the MIT license.
+ */
+
+require('../lib/cli').start();
