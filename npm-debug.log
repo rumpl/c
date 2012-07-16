@@ -1,0 +1,55 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'c' ]
+2 info using npm@1.1.30
+3 info using node@v0.8.2
+4 verbose config file /Users/rumpl/.npmrc
+5 verbose config file /usr/local/etc/npmrc
+6 verbose config file /usr/local/lib/node_modules/npm/npmrc
+7 verbose read json /usr/local/lib/package.json
+8 verbose read json /usr/local/lib/package.json
+9 verbose cache add [ 'c', null ]
+10 silly cache add name=undefined spec="c" args=["c",null]
+11 verbose parsed url { pathname: 'c', path: 'c', href: 'c' }
+12 verbose addNamed [ 'c', '' ]
+13 verbose addNamed [ null, '' ]
+14 silly addNameRange { name: 'c', range: '', hasData: false }
+15 verbose url raw c
+16 verbose url resolving [ 'https://registry.npmjs.org/', './c' ]
+17 verbose url resolved https://registry.npmjs.org/c
+18 http GET https://registry.npmjs.org/c
+19 http 200 https://registry.npmjs.org/c
+20 silly registry.get cb [ 200,
+20 silly registry.get   { vary: 'Accept',
+20 silly registry.get     server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+20 silly registry.get     etag: '"91G4UX322KIU2TUGQT6KHGCRH"',
+20 silly registry.get     date: 'Mon, 16 Jul 2012 22:02:02 GMT',
+20 silly registry.get     'content-type': 'application/json',
+20 silly registry.get     'content-length': '4130' } ]
+21 silly addNameRange number 2 { name: 'c', range: '', hasData: true }
+22 silly addNameRange versions [ 'c', [] ]
+23 error Error: No compatible version found: c
+23 error No valid targets found.
+23 error Perhaps not compatible with your version of node?
+23 error     at installTargetsError (/usr/local/lib/node_modules/npm/lib/cache.js:506:10)
+23 error     at next_ (/usr/local/lib/node_modules/npm/lib/cache.js:452:17)
+23 error     at next (/usr/local/lib/node_modules/npm/lib/cache.js:427:44)
+23 error     at /usr/local/lib/node_modules/npm/lib/cache.js:419:5
+23 error     at saved (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:136:7)
+23 error     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:230:7
+23 error     at Object.oncomplete (fs.js:297:15)
+23 error  [Error: No compatible version found: c
+23 error No valid targets found.
+23 error Perhaps not compatible with your version of node?]
+24 error You may report this log at:
+24 error     <http://github.com/isaacs/npm/issues>
+24 error or email it to:
+24 error     <npm-@googlegroups.com>
+25 error System Darwin 11.4.0
+26 error command "node" "/usr/local/bin/npm" "install" "-g" "c"
+27 error cwd /Users/rumpl/dev/folderComment
+28 error node -v v0.8.2
+29 error npm -v 1.1.30
+30 error message No compatible version found: c
+30 error message No valid targets found.
+30 error message Perhaps not compatible with your version of node?
+31 verbose exit [ 1, true ]
