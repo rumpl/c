@@ -22,7 +22,7 @@ Run it without any parameter to see the usage
     help:        c delete [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
     help:
     help:   Author: Djordje Lukic <lukic.djordje@gmail.com>
-    Stolen from Jonovono (https://github.com/Jonovono/c)
+    help:   Stolen from Jonovono (https://github.com/Jonovono/c)
 
 
 List the comments
