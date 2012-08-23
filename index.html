@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>C by rumpl</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/rumpl/c">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/rumpl/c/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/rumpl/c/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>C</h1>
+          <p>Add comments on any file or folder.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/rumpl">rumpl</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>c</h1>
+
+<p>Give folders or directories comments and view them easy.</p>
+
+<p>Original idea by <a href="https://github.com/Jonovono/c">Jonovono</a></p>
+
+<h2>Installation</h2>
+
+<p>Install the module with: <code>npm install c -g</code></p>
+
+<h2>Examples</h2>
+
+<p>Run it without any parameter to see the usage</p>
+
+<pre><code>help:
+help:   c - Add comments to any file or directory.
+help:
+help:   Usage:
+help:
+help:        c list   [DIRECTORY]                 - Lists all the comments for the [DIRECTORY].
+help:        c add    [FILE|DIRECTORY] [COMMENT]  - Adds a comment for the file/directory.
+help:        c set    [FILE|DIRECTORY] [COMMENT]  - Sets a new comment for the file/directory.
+help:        c delete [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
+help:
+help:   Author: Djordje Lukic &lt;lukic.djordje@gmail.com&gt;
+help:   Stolen from Jonovono (https://github.com/Jonovono/c)
+</code></pre>
+
+<p>List the comments</p>
+
+<pre><code>$ c l .
+
+Comments for this directory:
+
+  .npmignore
+  bin
+</code></pre>
+
+<p>Add a comment to a folder/file</p>
+
+<pre><code>$ c add bin This is the bin folder
+$ c list .
+
+Comments for this directory:
+
+  .npmignore
+  bin               This is the bin folder
+</code></pre>
+
+<p>Remove comments from a folder/file</p>
+
+<pre><code>$ c rm bin
+$ c l .
+
+Comments for this directory:
+
+  .npmignore
+  bin
+</code></pre>
+
+<h2>TODO</h2>
+
+<p>Tests tests tests</p>
+
+<h2>License</h2>
+
+<p>MIT: <a href="http://rumpl.mit-license.org">http://rumpl.mit-license.org</a></p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
