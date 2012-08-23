@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/rumpl/c.png)](http://travis-ci.org/rumpl/c)
 # c
 
 Give folders or directories comments and view them easy.
