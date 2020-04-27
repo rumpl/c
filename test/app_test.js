@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-var app = require('../lib/app.js');
-var flatiron = require('flatiron');
+var app = require("../lib/app.js");
+var flatiron = require("flatiron");
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -24,8 +24,8 @@ var flatiron = require('flatiron');
 */
 
 exports.app = {
-  'isFlatiron': function (test) {
+  isFlatiron: function (test) {
     test.equal(app, flatiron.app);
     test.done();
-  }
+  },
 };
