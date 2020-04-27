@@ -1,29 +1,23 @@
 # c
 
-Give folders or directories comments and view them easy.
+Write, view, edit and delete comments on files and directories.
 
-Original idea by [Jonovono](https://github.com/Jonovono/c)
+Original idea by [Jonovono](https://github.com/Jonovono/c).
 
 ## Installation
-Install the module with: `npm install c -g`
+
+Install the module globally with `npm install c -g`.
 
 ## Examples
 
-Run it without any parameter to see the usage
+Run it without any parameter to see the usage:
 
-    help:
-    help:   c - Add comments to any file or directory.
-    help:
-    help:   Usage:
-    help:
-    help:        c list   [DIRECTORY]                 - Lists all the comments for the [DIRECTORY].
-    help:        c add    [FILE|DIRECTORY] [COMMENT]  - Adds a comment for the file/directory.
-    help:        c set    [FILE|DIRECTORY] [COMMENT]  - Sets a new comment for the file/directory.
-    help:        c delete [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
-    help:
-    help:   Author: Djordje Lukic <lukic.djordje@gmail.com>
-    help:   Stolen from Jonovono (https://github.com/Jonovono/c)
+    list, l     [DIRECTORY]                 - Lists all the comments for the specified directory.
+    set, s      [FILE|DIRECTORY] [COMMENT]  - Sets a new comment for the file/directory.
+    remove, rm  [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
 
+Author: Djordje Lukic <lukic.djordje@gmail.com>
+Stolen from Jonovono (https://github.com/Jonovono/c)
 
 List the comments
 
@@ -34,9 +28,9 @@ List the comments
       .npmignore
       bin
 
-Add a comment to a folder/file
+Set a comment to a folder/file
 
-    $ c add bin This is the bin folder
+    $ c set bin This is the bin folder
     $ c list .
 
     Comments for this directory:
