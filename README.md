@@ -48,10 +48,6 @@ Remove comments from a folder/file
       .npmignore
       bin
 
-## TODO
-
-Tests tests tests
-
 ## License
 
 MIT: http://rumpl.mit-license.org
