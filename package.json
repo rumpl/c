@@ -1,7 +1,7 @@
 {
   "name": "c-more",
   "description": "Set and remove comments from files and directories, and view them from the command line.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "homepage": "https://github.com/rumpl/c",
   "author": {
     "name": "Lawrence Warren",
