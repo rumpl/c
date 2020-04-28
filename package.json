@@ -1,11 +1,11 @@
 {
-  "name": "c",
+  "name": "c-more",
   "description": "Set and remove comments from files and directories, and view them from the command line.",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "homepage": "https://github.com/rumpl/c",
   "author": {
-    "name": "rumpl",
-    "email": "lukic.djordje@gmail.com"
+    "name": "Lawrence Warren",
+    "email": "lawrencewarren2@gmail.com"
   },
   "contributors": [
     {
@@ -16,15 +16,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/rumpl/c.git"
+    "url": "git://github.com/LawrenceWarren/c.git"
   },
   "bugs": {
-    "url": "https://github.com/rumpl/c/issues"
+    "url": "https://github.com/LawrenceWarren/c/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/rumpl/c/blob/master/LICENSE-MIT"
+      "url": "https://github.com/LawrenceWarren/c/blob/master/LICENSE-MIT"
     }
   ],
   "main": "./lib/cli.js",
