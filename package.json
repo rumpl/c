@@ -27,16 +27,15 @@
       "url": "https://github.com/rumpl/c/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "bin/c",
+  "main": "./lib/cli.js",
   "engines": {
     "node": "^0.8.2"
   },
   "dependencies": {
     "colors": "1.4.0",
-    "meow": "^6.1.0",
     "underscore": "1.10.2"
   },
   "devDependencies": {},
   "keywords": [],
-  "bin": "./c"
+  "bin": "./lib/cli.js"
 }
