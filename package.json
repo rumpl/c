@@ -1,12 +1,19 @@
 {
   "name": "c",
-  "description": "Give folders or directories comments and view them easy.",
-  "version": "0.1.0",
+  "description": "Set and remove comments from files and directories, and view them from the command line.",
+  "version": "0.2.0",
   "homepage": "https://github.com/rumpl/c",
   "author": {
     "name": "rumpl",
     "email": "lukic.djordje@gmail.com"
   },
+  "contributors": [
+    {
+      "name": "Lawrence Warren",
+      "email": "lawrencewarren2@gmail.com",
+      "url": "https://www.github.com/LawrenceWarren"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/rumpl/c.git"
@@ -21,22 +28,15 @@
     }
   ],
   "main": "bin/c",
-  "bin": {
-    "c": "bin/c"
-  },
   "engines": {
-    "node": "~0.8.2"
-  },
-  "scripts": {
-    "test": "grunt test"
+    "node": "^0.8.2"
   },
   "dependencies": {
     "colors": "1.4.0",
-    "underscore": "1.10.2",
-    "flatiron": "0.4.3"
+    "meow": "^6.1.0",
+    "underscore": "1.10.2"
   },
-  "devDependencies": {
-    "grunt": "~1.1.0"
-  },
-  "keywords": []
+  "devDependencies": {},
+  "keywords": [],
+  "bin": "./c"
 }

@@ -8,4 +8,4 @@
  * Licensed under the MIT license.
  */
 
-require("../lib/cli").start();
+require("./lib/app").start();
