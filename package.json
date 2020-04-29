@@ -1,11 +1,11 @@
 {
-  "name": "c-more",
+  "name": "c",
   "description": "Set and remove comments from files and directories, and view them from the command line.",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/rumpl/c",
   "author": {
-    "name": "Lawrence Warren",
-    "email": "lawrencewarren2@gmail.com"
+    "name": "rumpl",
+    "email": "lukic.djordje@gmail.com"
   },
   "contributors": [
     {
@@ -16,26 +16,32 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/LawrenceWarren/c.git"
+    "url": "git://github.com/rumpl/c.git"
   },
   "bugs": {
-    "url": "https://github.com/LawrenceWarren/c/issues"
+    "url": "https://github.com/rumpl/c/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/LawrenceWarren/c/blob/master/LICENSE-MIT"
+      "url": "https://github.com/rumpl/c/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "./lib/cli.js",
+  "main": "./src/cli.js",
   "engines": {
-    "node": "~0.8.2"
+    "node": "~12.16.2"
   },
   "dependencies": {
     "colors": "1.4.0",
     "underscore": "1.10.2"
   },
   "devDependencies": {},
-  "keywords": [],
-  "bin": "./lib/cli.js"
+  "keywords": [
+    "File system",
+    "Comments",
+    "File descriptions",
+    "CLI",
+    "Global"
+  ],
+  "bin": "./src/cli.js"
 }
