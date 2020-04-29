@@ -78,6 +78,7 @@ storage.exists = function (dir) {
  */
 storage.create = function (dir) {
   fs.mkdirSync(path.join(dir, DIRECTORY), "0755"); //?Why option "0755?"
+  //TODO: Create a README.txt inside every `.comments` explaining what the directory is for.
 };
 
 /** Loads the names of all files & directories in the current directory EXCEPT `.comments`
