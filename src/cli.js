@@ -29,6 +29,7 @@ const [, , ...arg] = process.argv; //Gets command line arguments
  * method    | Function | The method that should be called, including the arguments passed to it.
  **/
 var flags = [
+  //help
   {
     longFlag: "--help",
     shortFlag: "-h",
@@ -37,6 +38,7 @@ var flags = [
       commands.help();
     },
   },
+  //version
   {
     longFlag: "--version",
     shortFlag: "-v",
@@ -45,6 +47,7 @@ var flags = [
       commands.version();
     },
   },
+  //list
   {
     longFlag: "--list",
     shortFlag: "-l",
@@ -53,6 +56,7 @@ var flags = [
       commands.list(arg[1]);
     },
   },
+  //remove
   {
     longFlag: "--remove",
     shortFlag: "-r",
@@ -61,6 +65,7 @@ var flags = [
       commands.delete(arg[1]);
     },
   },
+  //set
   {
     longFlag: "--set",
     shortFlag: "-s",
@@ -71,14 +76,14 @@ var flags = [
   },
 ];
 
-//Loops through the array, checking if flags match & correct amount of arguments was provided - calls method if so
+//Loops through the array, checking if flags match & correct amount of arguments was provided - calls method if so, then exits
 for (var flag of flags) {
   if (
     (arg[0] == flag.longFlag || arg[0] == flag.shortFlag) &&
     arg.length == flag.argCount
   ) {
     flag.method();
-    return;
+    return 0;
   }
 }
 
@@ -88,6 +93,5 @@ if (arg.length) {
     "Invalid flag".underline.red + ", please try the following:\n".red
   );
 }
-
 //Show how to use `c`
 commands.help();
