@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+//TODO: add a .commentsignore file for files which you would like to ignore from the --list.
 /*
  * c
  * https://github.com/rumpl/c
@@ -8,68 +8,80 @@
  * Licensed under the MIT license.
  */
 
-//Requirements
 "use strict";
 var commands = require("./commands");
 
-const [, , ...args] = process.argv; //Gets command line arguments
+const [, , ...arg] = process.argv; //Gets command line arguments
+/**
+ * * Argument structure:
+ *
+ * C    | program name.                       | <Required>
+ * Arg0 | flag specifying function.           | <Required>
+ * Arg1 | directory if required by function.  | <Flag dependant>
+ * Arg2 | Comment if required by function.    | <Flag dependant>
+ */
 
-//TODO: restructure so to note use stupid if/else statements. Some kind of lookup table.
-//TODO: add a .commentsignore file for files which you would like to ignore from the --list.
+/**Add new arguments here!
+ * * Object structure:
+ * longFlag  | String   | The `--<string>` version of the flag.
+ * shortFlag | String   | The `-<char>` version of the flag.
+ * argCount  | Int      | The number of arguments this flag takes (longFlag or shortFlag as arg[0]).
+ * method    | Function | The method that should be called, including the arguments passed to it.
+ **/
+var flags = [
+  {
+    longFlag: "--help",
+    shortFlag: "-h",
+    argCount: 1, //Flag
+    method: function () {
+      commands.help();
+    },
+  },
+  {
+    longFlag: "--version",
+    shortFlag: "-v",
+    argCount: 1, //Flag
+    method: function () {
+      commands.version();
+    },
+  },
+  {
+    longFlag: "--list",
+    shortFlag: "-l",
+    argCount: 2, //Flag, Directory
+    method: function () {
+      commands.list(arg[1]);
+    },
+  },
+  {
+    longFlag: "--remove",
+    shortFlag: "-r",
+    argCount: 2, //Flag, File|Directory
+    method: function () {
+      commands.delete(arg[1]);
+    },
+  },
+  {
+    longFlag: "--set",
+    shortFlag: "-s",
+    argCount: 3, //Flag, file|Directory, comment
+    method: function () {
+      commands.set(arg[1], arg[2]);
+    },
+  },
+];
 
-//Argument structure
-//C    = program name.
-//Arg0 = flag specifying function.
-//Arg1 = directory if required by function.
-//Arg2 = Comment if required by function.
-
-//!Need 0 arguments passed
-//HELP || NO FLAG
-if (!args.length || args[0] == "-h" || args[0] == "--help") {
-  commands.help();
-}
-//STATE VERSION
-else if (args[0] == "-v" || args[0] == "--version") {
-  commands.version();
-}
-
-//!Need 1 arguments passed
-else if (args.length < 2) {
-  console.error("A path must be specified.");
-}
-
-//LIST FILES AND RELEVANT COMMENTS
-else if (args[0] == "-l" || args[0] == "--list") {
-  //TODO: OH GOD test this please
-  if ((args[1] == "-f" || args[1] == "--filter") && args.length == 3) {
-    commands.filteredList(args[2]);
-  } else {
-    commands.list(args[1]);
+for (var each of flags) {
+  if (
+    (arg[0] == each.longFlag || arg[0] == each.shortFlag) &&
+    arg.length == each.argCount
+  ) {
+    each.method();
+    return;
   }
 }
-//REMOVE COMMENT RETAIN FILE
-else if (args[0] == "-rm" || args[0] == "--remove") {
-  commands.delete(args[1]);
-}
 
-//!Needs 2 arguments passed
-else if (args.length < 3) {
-  console.error("A path and comment must be specified.");
-  return;
-}
-
-//SET
-else if (args[0] == "-s" || args[0] == "--set") {
-  //Combines all remaining arguments into one string.
-  var comment = "";
-  for (var i = 2; i < args.length; i++) {
-    comment += args[i] + " ";
-  }
-
-  commands.set(args[1], comment);
-}
-
-//!Invalid flag
-else {
-  commands.invalid(args[0]);
-}
+console.error(
+  "Invalid flag".underline.red + ", please try the following:\n".red
+);
+commands.help();
