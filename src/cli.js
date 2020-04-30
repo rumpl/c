@@ -71,17 +71,23 @@ var flags = [
   },
 ];
 
-for (var each of flags) {
+//Loops through the array, checking if flags match & correct amount of arguments was provided - calls method if so
+for (var flag of flags) {
   if (
-    (arg[0] == each.longFlag || arg[0] == each.shortFlag) &&
-    arg.length == each.argCount
+    (arg[0] == flag.longFlag || arg[0] == flag.shortFlag) &&
+    arg.length == flag.argCount
   ) {
-    each.method();
+    flag.method();
     return;
   }
 }
 
-console.error(
-  "Invalid flag".underline.red + ", please try the following:\n".red
-);
+//If an argument was provided, prints an error message
+if (arg.length) {
+  console.error(
+    "Invalid flag".underline.red + ", please try the following:\n".red
+  );
+}
+
+//Show how to use `c`
 commands.help();
