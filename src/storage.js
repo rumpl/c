@@ -13,6 +13,7 @@
 var fs = require("fs"); //FileSystem
 var path = require("path"); //Paths
 var underscore = require("underscore"); //Some functional shit
+
 var storage = module.exports;
 var DIRECTORY = ".comments";
 var EXTENSION = ".comment";
