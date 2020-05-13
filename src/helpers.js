@@ -9,7 +9,6 @@
  */
 
 "use strict";
-const underscore = require("underscore");
 const helpers = module.exports;
 const colors = require("colors/safe"); //Despite looking unused, is not unused.
 const fs = require("fs");
