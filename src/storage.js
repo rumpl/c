@@ -10,13 +10,14 @@
 
 "use strict";
 
-var fs = require("fs"); //FileSystem
-var path = require("path"); //Paths
-var underscore = require("underscore"); //Some functional shit
+const fs = require("fs"); //FileSystem
+const path = require("path"); //Paths
 
 var storage = module.exports;
-var DIRECTORY = ".comments";
-var EXTENSION = ".comment";
+
+//Constants representing the directory name & file extension, respectively.
+const DIRECTORY = ".comments";
+const EXTENSION = ".comment";
 
 /** Sets a `.comment` file for a specific file.
  * @param {File} file a provided directory from the file tree.
@@ -29,8 +30,11 @@ storage.set = function (file, comment) {
   }
 
   var commentsFile = getCommentsFile(file); //Gets the file path
-  fs.writeFileSync(commentsFile, comment); //Writes the .comment file.
-  console.log(file + ".comment was written successfully.");
+  var id = fs.openSync(commentsFile, "a", "0644");
+
+  fs.writeSync(id, comment + "\n", null, "utf8");
+
+  fs.closeSync(id);
 };
 
 /**Deletes a `.comment` file, and deletes `.comments` if it is left empty.
@@ -39,25 +43,24 @@ storage.set = function (file, comment) {
 storage.delete = function (file) {
   //If there is no `.comments` directory...
   if (!storage.exists(path.dirname(file))) {
-    console.log(`No comment to be deleted for "${file}"`);
-    return;
+    return 1;
   }
 
   var commentsFile = getCommentsFile(file);
 
   //If the `file.comment` does not exist...
   if (!fs.existsSync(commentsFile)) {
-    console.log(`No comment to be deleted for "${file}"`);
-    return;
+    return 1;
   }
 
   fs.unlinkSync(commentsFile);
-  console.log(file + ".comment was deleted successfully.");
 
   //If the `.comments` directory is now empty...
   if (storage.loadFiles(path.join(path.dirname(file), DIRECTORY)).length == 0) {
     fs.rmdirSync(path.join(path.dirname(file), DIRECTORY));
   }
+
+  return 0;
 };
 
 /**Checks if `.comments` exists.
@@ -78,7 +81,7 @@ storage.exists = function (dir) {
  * @param {File} dir a provided directory from the file tree.
  */
 storage.create = function (dir) {
-  fs.mkdirSync(path.join(dir, DIRECTORY), "0755"); //?Why option "0755?"
+  fs.mkdirSync(path.join(dir, DIRECTORY), "0755");
   //TODO: Create a README.txt inside every `.comments` explaining what the directory is for.
 };
 
@@ -87,7 +90,7 @@ storage.create = function (dir) {
  * @returns An array of filenames.
  */
 storage.loadFiles = function (dir) {
-  return underscore.filter(fs.readdirSync(dir), function (file) {
+  return fs.readdirSync(dir).filter((file) => {
     return file !== DIRECTORY;
   });
 };

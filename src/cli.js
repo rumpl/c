@@ -9,7 +9,8 @@
  */
 
 "use strict";
-var commands = require("./commands");
+const commands = require("./commands");
+const colors = require("colors/safe");
 
 const [, , ...arg] = process.argv; //Gets command line arguments
 /**
@@ -23,75 +24,103 @@ const [, , ...arg] = process.argv; //Gets command line arguments
 
 /**Add new arguments here!
  * * Object structure:
- * longFlag  | String   | The `--<string>` version of the flag.
+ * action    | String   | The `<string>` version of the flag.
  * shortFlag | String   | The `-<char>` version of the flag.
  * argCount  | Int      | The number of arguments this flag takes (longFlag or shortFlag as arg[0]).
  * method    | Function | The method that should be called, including the arguments passed to it.
+ * fallback  | Function | If there are not < arguments, use fallback.
  **/
-var flags = [
+var options = [
   //help
   {
-    longFlag: "--help",
     shortFlag: "-h",
+    action: "help",
     argCount: 1, //Flag
     method: function () {
       commands.help();
     },
+    fallback: function () {
+      error();
+    },
   },
   //version
   {
-    longFlag: "--version",
     shortFlag: "-v",
+    action: "version",
     argCount: 1, //Flag
     method: function () {
       commands.version();
     },
+    fallback: function () {
+      error();
+    },
   },
   //list
   {
-    longFlag: "--list",
     shortFlag: "-l",
+    action: "list",
     argCount: 2, //Flag, Directory
     method: function () {
       commands.list(arg[1]);
     },
+    fallback: function () {
+      commands.list(".");
+    },
   },
   //remove
   {
-    longFlag: "--remove",
     shortFlag: "-r",
+    action: "remove",
     argCount: 2, //Flag, File|Directory
     method: function () {
       commands.delete(arg[1]);
     },
+    fallback: function () {
+      error();
+    },
   },
   //set
   {
-    longFlag: "--set",
     shortFlag: "-s",
+    action: "set",
     argCount: 3, //Flag, file|Directory, comment
     method: function () {
       commands.set(arg[1], arg[2]);
+    },
+    fallback: function () {
+      error();
     },
   },
 ];
 
 //Loops through the array, checking if flags match & correct amount of arguments was provided - calls method if so, then exits
-for (var flag of flags) {
-  if (
-    (arg[0] == flag.longFlag || arg[0] == flag.shortFlag) &&
-    arg.length == flag.argCount
-  ) {
-    flag.method();
-    return 0;
+for (var option of options) {
+  if (arg[0] == option.action || arg[0] == option.shortFlag) {
+    switch (arg.length) {
+      //The number of arguments specified
+      case option.argCount:
+        option.method();
+        return 0;
+      //The number of arguments specified -1
+      case option.argCount - 1:
+        option.fallback();
+        return 0;
+      //Error behaviour
+      default:
+        error();
+        return 1;
+    }
   }
 }
+//Did not enter the if statement, was not valid
+error();
+return 1;
 
-//If an argument was provided, prints an error message
-if (arg.length) {
+function error() {
   console.error(
-    "Invalid flag".underline.red + ", please try the following:\n".red
+    colors.red("Invalid flag".underline) +
+      colors.red(", please try the following:\n")
   );
+  //Show how to use `c`
+  commands.help();
 }
-//Show how to use `c`
-commands.help();

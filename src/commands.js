@@ -11,10 +11,11 @@
 "use strict";
 
 // Dependencies
-var pack = require("../package.json");
-var helpers = require("./helpers");
-var storage = require("./storage");
-var fs = require("fs");
+const pack = require("../package.json");
+const helpers = require("./helpers");
+const storage = require("./storage");
+const fs = require("fs");
+const colors = require("colors/safe");
 
 var commands = module.exports;
 
@@ -28,16 +29,16 @@ commands.list = function (dir) {
     return;
   }
 
-  if (!storage.exists(dir)) {
-    var comments = [];
+  if (storage.exists(dir)) {
+    var comments = storage.loadComments(dir);
     var files = storage.loadFiles(dir);
   } else {
-    var comments = storage.loadComments(dir);
+    var comments = [];
     var files = storage.loadFiles(dir);
   }
 
   //Prints the files and their comments.
-  helpers.printFileComments(files, comments);
+  helpers.printFileComments(files, comments, dir);
 };
 
 /** Lists only files with related `.comment` files.
@@ -72,6 +73,13 @@ commands.set = function (file, comment) {
   }
 
   storage.set(file, comment);
+  console.log(
+    '"' +
+      colors.cyan(comment) +
+      '" was applied to "' +
+      colors.cyan(file) +
+      '" successfully.'
+  );
 };
 
 /** Removes a comment from a file.
@@ -83,12 +91,14 @@ commands.delete = function (file) {
     console.error("Please specify a valid file or directory.");
     return;
   }
-  storage.delete(file);
+  if (storage.delete(file) == 1) {
+    console.log(`No comment to be deleted for "${file}"`);
+  } else {
+    console.log(file + ".comment was deleted successfully.");
+  }
 };
 
-/** Lists helper information.
- *
- */
+//Lists helper information.
 commands.help = function () {
   console.log(`Usage: c [-l  | --list <DIRECTORY|FILE>]
          [-rm | --remove <DIRECTORY|FILE>]
@@ -97,16 +107,14 @@ commands.help = function () {
          [-v  | --version]
 
 Options:
-  --list    | -l     Lists all the comments for the specified directory.
-  --set     | -s     Sets or overwrites a new comment for the file|directory.
-  --remove  | -rm    Deletes the comment for the file|directory.
-  --help    | -h     Shows the help menu.
-  --version | -v     States the version.`);
+  list    | -l     Lists all the comments for the specified directory.
+  set     | -s     Sets or overwrites a new comment for the file|directory.
+  remove  | -rm    Deletes the comment for the file|directory.
+  help    | -h     Shows the help menu.
+  version | -v     States the version.`);
 };
 
-/** Lists the current version.
- *
- */
+//Lists the current version.
 commands.version = function () {
   console.log("v" + pack.version);
 };
