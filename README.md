@@ -118,4 +118,4 @@ This will createa new release on github and publish the package on npm
 
 ## License
 
-MIT: http://rumpl.mit-license.org
+[MIT](https://rumpl.mit-license.org/)
