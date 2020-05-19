@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-//TODO: add a .commentsignore file for files which you would like to ignore from the --list.
+
 /*
  * c
  * https://github.com/rumpl/c

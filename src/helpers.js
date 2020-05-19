@@ -47,7 +47,7 @@ helpers.printFileComments = function (files, comments, dir) {
   //Gets the length of the longest filename in the array - iterators through files.
   const maxLine = maxLength(files);
 
-  //Prints the current file and it's comment //TODO: Make it look in the parent for a definition for the current directory?
+  //Prints the current file and it's comment
   print(".", comments["."], maxLine, dir);
   print("..", comments[".."], maxLine, dir);
 
