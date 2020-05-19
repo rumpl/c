@@ -104,6 +104,18 @@ Output:
     SomeDir/
     SomeFile.ext
 
+## Releasing
+
+To release a new version of `c` simply do:
+
+```
+$ git tag -a vVERSION -m "Version VERSION"
+# For example:
+$ git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+This will createa new release on github and publish the package on npm
+
 ## License
 
 MIT: http://rumpl.mit-license.org
