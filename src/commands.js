@@ -94,7 +94,7 @@ commands.delete = function (file) {
   if (storage.delete(file) == 1) {
     console.log(`No comment to be deleted for "${file}"`);
   } else {
-    console.log(file + ".comment was deleted successfully.");
+    console.log(file + " comment was deleted successfully.");
   }
 };
 

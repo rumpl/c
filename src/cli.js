@@ -69,7 +69,7 @@ var options = [
   },
   //remove
   {
-    shortFlag: "-r",
+    shortFlag: "-rm",
     action: "remove",
     argCount: 2, //Flag, File|Directory
     method: function () {
@@ -117,10 +117,7 @@ error();
 return 1;
 
 function error() {
-  console.error(
-    colors.red("Invalid flag".underline) +
-      colors.red(", please try the following:\n")
-  );
+  console.error(colors.red("Invalid flag, please try the following:\n"));
   //Show how to use `c`
   commands.help();
 }

@@ -2,51 +2,107 @@
 
 Write, view, edit and delete comments on files and directories.
 
+Authored by [Djordje Lukic](lukic.djordje@gmail.com). <br>
 Original idea by [Jonovono](https://github.com/Jonovono/c).
 
 ## Installation
 
 Install the module globally with `npm install c -g`.
 
-## Examples
+## Commands
 
-Run it without any parameter to see the usage:
+    Usage: c [-l  | list <DIRECTORY|FILE>]
+             [-rm | remove <DIRECTORY|FILE>]
+             [-s  | set <DIRECTORY|FILE> <COMMENT>]
+             [-h  | help]
+             [-v  | version]
 
-    list, l     [DIRECTORY]                 - Lists all the comments for the specified directory.
-    set, s      [FILE|DIRECTORY] [COMMENT]  - Sets a new comment for the file/directory.
-    remove, rm  [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
+    Options:
+      list    | -l     Lists all the comments for the specified directory.
+      set     | -s     Sets or overwrites a new comment for the file|directory.
+      remove  | -rm    Deletes the comment for the file|directory.
+      help    | -h     Shows the help menu.
+      version | -v     States the version.
 
-Author: Djordje Lukic <lukic.djordje@gmail.com>
-Stolen from Jonovono (https://github.com/Jonovono/c)
+## Commands usage
 
-List the comments
+### `-l` or `list`
 
-    $ c l .
+Example:
 
-    Comments for this directory:
-
-      .npmignore
-      bin
-
-Set a comment to a folder/file
-
-    $ c set bin This is the bin folder
     $ c list .
 
-    Comments for this directory:
+Output:
 
-      .npmignore
-      bin               This is the bin folder
+    ./
+    ../
+    someDir/
+    someFile.ext
 
-Remove comments from a folder/file
+---
 
-    $ c rm bin
-    $ c l .
+Example:
 
-    Comments for this directory:
+    $ c -l someDir
 
-      .npmignore
-      bin
+Output:
+
+    ./
+    ../
+    NestedDir/
+    NestedFile.extension
+
+---
+
+### `-s` or `set`
+
+Example:
+
+    $ c set . "What a great utility!"
+    $ c list .
+
+Output:
+
+    "What a great utility!" was applied to "." successfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/
+    SomeFile.ext
+
+---
+
+Example:
+
+    $ c -s someDir "Another comment"
+    $ c -l .
+
+Output:
+
+    "Another comment" was applied to "someDir" succesfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/     Another comment
+    SomeFile.ext
+
+---
+
+### `-rm` or `remove`
+
+Example:
+
+    $ c remove someDir
+    $ c list .
+
+Output:
+
+    someDir comment was deleted succesfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/
+    SomeFile.ext
 
 ## License
 

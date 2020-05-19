@@ -33,7 +33,9 @@ var print = function (file, nodeComment, maxLine, dir) {
   if (fs.statSync(dir + "/" + file).isFile()) {
     console.log(colors.brightGreen(file) + pad + colors.yellow(nodeComment));
   } else {
-    console.log(colors.brightCyan(file) + pad + colors.yellow(nodeComment));
+    console.log(
+      colors.brightCyan(file + "/") + pad + colors.yellow(nodeComment)
+    );
   }
 };
 
@@ -46,8 +48,8 @@ helpers.printFileComments = function (files, comments, dir) {
   const maxLine = maxLength(files);
 
   //Prints the current file and it's comment //TODO: Make it look in the parent for a definition for the current directory?
-  print("./", comments["."], maxLine, dir);
-  print("../", comments[".."], maxLine, dir);
+  print(".", comments["."], maxLine, dir);
+  print("..", comments[".."], maxLine, dir);
 
   //For each file run the print function.
   files.forEach(function (file) {
