@@ -1,62 +1,108 @@
 # c
 
-Give folders or directories comments and view them easy.
+Write, view, edit and delete comments on files and directories.
 
-Original idea by [Jonovono](https://github.com/Jonovono/c)
+Authored by [Djordje Lukic](lukic.djordje@gmail.com). <br>
+Original idea by [Jonovono](https://github.com/Jonovono/c).
 
 ## Installation
-Install the module with: `npm install c -g`
 
-## Examples
+Install the module globally with `npm install c -g`.
 
-Run it without any parameter to see the usage
+## Commands
 
-    help:
-    help:   c - Add comments to any file or directory.
-    help:
-    help:   Usage:
-    help:
-    help:        c list   [DIRECTORY]                 - Lists all the comments for the [DIRECTORY].
-    help:        c add    [FILE|DIRECTORY] [COMMENT]  - Adds a comment for the file/directory.
-    help:        c set    [FILE|DIRECTORY] [COMMENT]  - Sets a new comment for the file/directory.
-    help:        c delete [FILE|DIRECTORY]            - Deletes all the comments for the file/directory.
-    help:
-    help:   Author: Djordje Lukic <lukic.djordje@gmail.com>
-    help:   Stolen from Jonovono (https://github.com/Jonovono/c)
+    Usage: c [-l  | list <DIRECTORY|FILE>]
+             [-rm | remove <DIRECTORY|FILE>]
+             [-s  | set <DIRECTORY|FILE> <COMMENT>]
+             [-h  | help]
+             [-v  | version]
 
+    Options:
+      list    | -l     Lists all the comments for the specified directory.
+      set     | -s     Sets or overwrites a new comment for the file|directory.
+      remove  | -rm    Deletes the comment for the file|directory.
+      help    | -h     Shows the help menu.
+      version | -v     States the version.
 
-List the comments
+## Commands usage
 
-    $ c l .
+### `-l` or `list`
 
-    Comments for this directory:
+Example:
 
-      .npmignore
-      bin
-
-Add a comment to a folder/file
-
-    $ c add bin This is the bin folder
     $ c list .
 
-    Comments for this directory:
+Output:
 
-      .npmignore
-      bin               This is the bin folder
+    ./
+    ../
+    someDir/
+    someFile.ext
 
-Remove comments from a folder/file
+---
 
-    $ c rm bin
-    $ c l .
+Example:
 
-    Comments for this directory:
+    $ c -l someDir
 
-      .npmignore
-      bin
+Output:
 
-## TODO
+    ./
+    ../
+    NestedDir/
+    NestedFile.extension
 
-Tests tests tests
+---
+
+### `-s` or `set`
+
+Example:
+
+    $ c set . "What a great utility!"
+    $ c list .
+
+Output:
+
+    "What a great utility!" was applied to "." successfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/
+    SomeFile.ext
+
+---
+
+Example:
+
+    $ c -s someDir "Another comment"
+    $ c -l .
+
+Output:
+
+    "Another comment" was applied to "someDir" succesfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/     Another comment
+    SomeFile.ext
+
+---
+
+### `-rm` or `remove`
+
+Example:
+
+    $ c remove someDir
+    $ c list .
+
+Output:
+
+    someDir comment was deleted succesfully.
+
+    ./           What a great utility!
+    ../
+    SomeDir/
+    SomeFile.ext
 
 ## License
 
