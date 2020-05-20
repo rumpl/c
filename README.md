@@ -2,7 +2,6 @@
 
 Write, view, edit and delete comments on files and directories.
 
-Authored by [Djordje Lukic](lukic.djordje@gmail.com). <br>
 Original idea by [Jonovono](https://github.com/Jonovono/c).
 
 ## Installation
