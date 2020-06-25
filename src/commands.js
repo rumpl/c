@@ -83,6 +83,7 @@ commands.set = function (file, comment) {
     const pathUpTo = path.resolve("./");
     const trueFile = trueCasePathSync(file, pathUpTo);
     file = trueFile.replace(pathUpTo, "").replace("/", "");
+    file = trueFile.replace(pathUpTo, "").replace("\\", "");
   }
 
   storage.set(file, comment);
