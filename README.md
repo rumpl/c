@@ -36,7 +36,7 @@ Install the module globally with `npm install c -g`.
 
 ### `-s` or `set` **and** `-l` or `list`
 
-![Setting and listing comments gif](https://imgur.com/W98C7yo.gif)
+![Setting and listing comments gif](resources/ListandSet.gif)
 
 #### **Example:**
 
@@ -70,7 +70,7 @@ Install the module globally with `npm install c -g`.
 
 ### `-rm` or `remove`
 
-![Removing comments gif](https://i.imgur.com/ZUmTnV3.gif)
+![Removing comments gif](resources/Deleting.gif)
 
 #### **Example:**
 
@@ -90,13 +90,13 @@ Install the module globally with `npm install c -g`.
 
 ### `-v` or `version` **and** `-h` or `help`
 
-![Alternate operations gif](https://imgur.com/v06z1jm.gif)
+![Alternative operations gif](resources/other.gif)
 
 ---
 
 ### Operating in child and parent directories
 
-![Complex usage demo gif](https://imgur.com/kmFxhhi.gif)
+![Complex usage demo gif](resources/NestedWorking.gif)
 
 ## Releasing
 
