@@ -1,13 +1,19 @@
 # c
 
-Write, view, edit and delete comments on files and directories.
+## Project information
+
+Write, view, edit and delete comments on files and directories, all from the command line.
 
 Authored by [Djordje Lukic](lukic.djordje@gmail.com). <br>
 Original idea by [Jonovono](https://github.com/Jonovono/c).
 
+---
+
 ## Installation
 
 Install the module globally with `npm install c -g`.
+
+---
 
 ## Commands
 
@@ -24,44 +30,20 @@ Install the module globally with `npm install c -g`.
       help    | -h     Shows the help menu.
       version | -v     States the version.
 
-## Commands usage
-
-### `-l` or `list`
-
-Example:
-
-    $ c list .
-
-Output:
-
-    ./
-    ../
-    someDir/
-    someFile.ext
-
 ---
 
-Example:
+## Usage
 
-    $ c -l someDir
+### `-s` or `set` **and** `-l` or `list`
 
-Output:
+![Setting and listing comments gif](https://imgur.com/W98C7yo.gif)
 
-    ./
-    ../
-    NestedDir/
-    NestedFile.extension
-
----
-
-### `-s` or `set`
-
-Example:
+#### **Example:**
 
     $ c set . "What a great utility!"
     $ c list .
 
-Output:
+#### **Output:**
 
     "What a great utility!" was applied to "." successfully.
 
@@ -70,14 +52,12 @@ Output:
     SomeDir/
     SomeFile.ext
 
----
-
-Example:
+#### **Example:**
 
     $ c -s someDir "Another comment"
     $ c -l .
 
-Output:
+#### **Output:**
 
     "Another comment" was applied to "someDir" successfully.
 
@@ -90,12 +70,14 @@ Output:
 
 ### `-rm` or `remove`
 
-Example:
+![Removing comments gif](https://i.imgur.com/ZUmTnV3.gif)
+
+#### **Example:**
 
     $ c remove someDir
     $ c list .
 
-Output:
+#### **Output:**
 
     someDir comment was deleted successfully.
 
@@ -103,6 +85,18 @@ Output:
     ../
     SomeDir/
     SomeFile.ext
+
+---
+
+### `-v` or `version` **and** `-h` or `help`
+
+![Alternate operations gif](https://imgur.com/v06z1jm.gif)
+
+---
+
+### Operating in child and parent directories
+
+![Complex usage demo gif](https://imgur.com/kmFxhhi.gif)
 
 ## Releasing
 
