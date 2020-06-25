@@ -126,7 +126,7 @@ error();
 return 1;
 
 function error() {
-  console.error(colors.red("Invalid flag, please try the following:\n"));
+  console.error(colors.red("\nInvalid flag, please try the following:\n"));
   //Show how to use `c`
   commands.help();
 }
