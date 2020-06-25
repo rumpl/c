@@ -20,21 +20,24 @@ const colors = require("colors/safe");
 var commands = module.exports;
 
 /**Lists all `.comment` files available within `.comments`.
- * @param {File} dir the current directory.
+ * @param {String} dir the relative filepath to a directory, the content of which will be listed.
  */
 commands.list = function (dir) {
-  //Checks if the file path is invalid OR a directory - returns if so.
+  //Checks if the path is invalid OR a directory - returns if so.
   if (!fs.existsSync(dir) || fs.statSync(dir).isFile()) {
     console.error("Please specify a valid directory.");
     return;
   }
 
+  var comments, files;
+
+  //If there is not a '.comments', pass in an empty array
   if (storage.exists(dir)) {
-    var comments = storage.loadComments(dir);
-    var files = storage.loadFiles(dir);
+    comments = storage.loadComments(dir);
+    files = storage.loadFiles(dir);
   } else {
-    var comments = [];
-    var files = storage.loadFiles(dir);
+    comments = [];
+    files = storage.loadFiles(dir);
   }
 
   //Prints the files and their comments.
@@ -50,12 +53,14 @@ commands.filteredList = function (dir) {
     return;
   }
 
+  var comments, files;
+
   if (!storage.exists(dir)) {
-    var comments = [];
-    var files = storage.loadFiles(dir);
+    comments = [];
+    files = storage.loadFiles(dir);
   } else {
-    var comments = storage.loadComments(dir);
-    var files = storage.loadFiles(dir);
+    files = storage.loadFiles(dir);
+    comments = storage.loadComments(dir);
   }
 
   helpers.printOnlyComments(files, comments);
@@ -111,7 +116,7 @@ Options:
   set     | -s     Sets or overwrites a new comment for the file|directory.
   remove  | -rm    Deletes the comment for the file|directory.
   help    | -h     Shows the help menu.
-  version | -v     States the version.`);
+  version | -v     States the version.\n`);
 };
 
 //Lists the current version.

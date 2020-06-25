@@ -82,7 +82,6 @@ storage.exists = function (dir) {
  */
 storage.create = function (dir) {
   fs.mkdirSync(path.join(dir, DIRECTORY), "0755");
-  //TODO: Create a README.txt inside every `.comments` explaining what the directory is for.
 };
 
 /** Loads the names of all files & directories in the current directory EXCEPT `.comments`
@@ -122,5 +121,3 @@ function getCommentsFile(file) {
 
   return path.join(dirname, DIRECTORY, filename + EXTENSION);
 }
-
-//TODO: Make a cleaner function that cleans out unused `.comment` files (if a file is no longer present, remove it's `.comment` file)

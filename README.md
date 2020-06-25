@@ -2,6 +2,7 @@
 
 Write, view, edit and delete comments on files and directories.
 
+Authored by [Djordje Lukic](lukic.djordje@gmail.com). <br>
 Original idea by [Jonovono](https://github.com/Jonovono/c).
 
 ## Installation
@@ -113,8 +114,8 @@ $ git tag -a vVERSION -m "Version VERSION"
 $ git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
-This will createa new release on github and publish the package on npm
+This will create a new release on github and publish the package on npm
 
 ## License
 
-[MIT](https://rumpl.mit-license.org/)
+MIT: http://rumpl.mit-license.org
