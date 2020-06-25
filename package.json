@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "homepage": "https://github.com/rumpl/c",
   "author": {
-    "name": "rumpl",
-    "email": "lukic.djordje@gmail.com"
+    "name": "Djordje Lukic",
+    "email": "lukic.djordje@gmail.com",
+    "url": "https://github.com/rumpl"
   },
   "contributors": [
     {

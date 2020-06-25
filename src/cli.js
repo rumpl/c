@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/*
+/**
  * c
  * https://github.com/rumpl/c
  *
@@ -25,7 +25,7 @@ const [, , ...arg] = process.argv; //Gets command line arguments
 /**Add new arguments here!
  * * Object structure:
  * action    | String   | The `<string>` version of the flag.
- * shortFlag | String   | The `-<char>` version of the flag.
+ * shortFlag | String   | The `- <char>` version of the flag.
  * argCount  | Int      | The number of arguments this flag takes (longFlag or shortFlag as arg[0]).
  * method    | Function | The method that should be called, including the arguments passed to it.
  * fallback  | Function | If there are not < arguments, use fallback.
@@ -36,10 +36,10 @@ var options = [
     shortFlag: "-h",
     action: "help",
     argCount: 1, //Flag
-    method: function () {
+    method: () => {
       commands.help();
     },
-    fallback: function () {
+    fallback: () => {
       error();
     },
   },
@@ -48,10 +48,10 @@ var options = [
     shortFlag: "-v",
     action: "version",
     argCount: 1, //Flag
-    method: function () {
+    method: () => {
       commands.version();
     },
-    fallback: function () {
+    fallback: () => {
       error();
     },
   },
@@ -60,10 +60,10 @@ var options = [
     shortFlag: "-l",
     action: "list",
     argCount: 2, //Flag, Directory
-    method: function () {
+    method: () => {
       commands.list(arg[1]);
     },
-    fallback: function () {
+    fallback: () => {
       commands.list(".");
     },
   },
@@ -72,10 +72,10 @@ var options = [
     shortFlag: "-rm",
     action: "remove",
     argCount: 2, //Flag, File|Directory
-    method: function () {
+    method: () => {
       commands.delete(arg[1]);
     },
-    fallback: function () {
+    fallback: () => {
       error();
     },
   },
@@ -84,16 +84,25 @@ var options = [
     shortFlag: "-s",
     action: "set",
     argCount: 3, //Flag, file|Directory, comment
-    method: function () {
+    method: () => {
       commands.set(arg[1], arg[2]);
     },
-    fallback: function () {
+    fallback: () => {
       error();
     },
   },
 ];
 
-//Loops through the array, checking if flags match & correct amount of arguments was provided - calls method if so, then exits
+/** This loops through each element of the options array defined above
+ *  It checks to see if the first command line argument corresponds to a long or short flag:
+ *  If it does, it checks the length of the full command line argument provided
+ *  If the length of the array equals the current options[] element's specified 'argCount' variable, it calls 'method' variable.
+ *  * This simply passes the relevant arg parameters into the relevant method exported from 'commands.js'
+ *  If the length of the array equals the current options[] element's specified 'argCount' variable minus 1, it calls the 'fallback' variable.
+ *  * This passes the relevant arg parameters into the relevant method exported from 'commands.js', but with some default parameter provided.
+ *  * For example, in the '-l' flag, if you provide 1 less parameter than default, it will automatically list the current directory.
+ *  Otherwise it calls the 'error' function below.
+ */
 for (var option of options) {
   if (arg[0] == option.action || arg[0] == option.shortFlag) {
     switch (arg.length) {
@@ -108,10 +117,10 @@ for (var option of options) {
       //Error behaviour
       default:
         error();
-        return 1;
     }
   }
 }
+
 //Did not enter the if statement, was not valid
 error();
 return 1;
