@@ -14,8 +14,10 @@
 const pack = require("../package.json");
 const helpers = require("./helpers");
 const storage = require("./storage");
+const path = require("path");
 const fs = require("fs");
 const colors = require("colors/safe");
+const { trueCasePathSync } = require("true-case-path");
 
 var commands = module.exports;
 
@@ -67,7 +69,7 @@ commands.filteredList = function (dir) {
 };
 
 /** Adds or overwrites a comment to a file.
- * @param {File} file The name of the file to add a relevant `.comment`.
+ * @param {String} file The name of the file to add a relevant `.comment`.
  * @param {String} comment The comment to be written.
  */
 commands.set = function (file, comment) {
@@ -75,6 +77,12 @@ commands.set = function (file, comment) {
   if (!fs.existsSync(file)) {
     console.error("Please specify a valid directory or file.");
     return;
+  }
+
+  if (file != "./" && file != "../" && file != "." && file != "..") {
+    const pathUpTo = path.resolve("./");
+    const trueFile = trueCasePathSync(file, pathUpTo);
+    file = trueFile.replace(pathUpTo, "").replace("/", "");
   }
 
   storage.set(file, comment);
