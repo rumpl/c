@@ -79,7 +79,7 @@ Example:
 
 Output:
 
-    "Another comment" was applied to "someDir" succesfully.
+    "Another comment" was applied to "someDir" successfully.
 
     ./           What a great utility!
     ../
@@ -97,7 +97,7 @@ Example:
 
 Output:
 
-    someDir comment was deleted succesfully.
+    someDir comment was deleted successfully.
 
     ./           What a great utility!
     ../
