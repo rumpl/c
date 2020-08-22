@@ -14,8 +14,10 @@
 const pack = require("../package.json");
 const helpers = require("./helpers");
 const storage = require("./storage");
+const path = require("path");
 const fs = require("fs");
 const colors = require("colors/safe");
+const { trueCasePathSync } = require("true-case-path");
 
 var commands = module.exports;
 
@@ -66,24 +68,29 @@ commands.filteredList = function (dir) {
   helpers.printOnlyComments(files, comments);
 };
 
-/** Adds or overwrites a comment to a file.
- * @param {File} file The name of the file to add a relevant `.comment`.
+/** Adds a comment to a file or directory.
+ * @param {String} node The name of the node to add a relevant `.comment`.
  * @param {String} comment The comment to be written.
  */
-commands.set = function (file, comment) {
+commands.set = function (node, comment) {
   //Checks if the file is invalid
-  if (!fs.existsSync(file)) {
+  if (!fs.existsSync(node)) {
     console.error("Please specify a valid directory or file.");
     return;
   }
 
-  storage.set(file, comment);
+  //If 'node' is valid and has characters, ensure it is case correct
+  if (node != "./" && node != "../" && node != "." && node != "..") {
+    const pathUpTo = path.resolve("./"); //Get the relative path up to the node
+    const trueFile = trueCasePathSync(node, pathUpTo); //Get the case sensitive version of the absolute path
+    node = trueFile.replace(pathUpTo, "").slice(1); //Return case sensitive relative path
+  }
+
+  storage.set(node, comment);
   console.log(
-    '"' +
-      colors.cyan(comment) +
-      '" was applied to "' +
-      colors.cyan(file) +
-      '" successfully.'
+    `"${colors.cyan(comment)}" was applied to "${colors.cyan(
+      node
+    )}" successfully.`
   );
 };
 
