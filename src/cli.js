@@ -30,7 +30,7 @@ const [, , ...arg] = process.argv; //Gets command line arguments
  * method    | Function | The method that should be called, including the arguments passed to it.
  * fallback  | Function | If there are not < arguments, use fallback.
  **/
-var options = [
+const options = [
   //help
   {
     shortFlag: "-h",
@@ -103,7 +103,7 @@ var options = [
  *  * For example, in the '-l' flag, if you provide 1 less parameter than default, it will automatically list the current directory.
  *  Otherwise it calls the 'error' function below.
  */
-for (var option of options) {
+for (const option of options) {
   if (arg[0] == option.action || arg[0] == option.shortFlag) {
     switch (arg.length) {
       //The number of arguments specified

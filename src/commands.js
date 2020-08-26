@@ -15,64 +15,67 @@ const pack = require("../package.json");
 const helpers = require("./helpers");
 const storage = require("./storage");
 const path = require("path");
-const fs = require("fs");
 const colors = require("colors/safe");
 const { trueCasePathSync } = require("true-case-path");
 
-var commands = module.exports;
+const commands = module.exports;
 
 /**Lists all `.comment` files available within `.comments`.
- * @param {String} dir the relative filepath to a directory, the content of which will be listed.
- * * @return {int} error code.
+ * @param {String} RelativePathToTargetNode The relative path from the
+ * current directory to the target directory.
+ * @return {int} error code.
  */
-commands.list = function (dir) {
+commands.list = function (RelativePathToTargetNode) {
   //Checks if the path is invalid OR a directory - returns if so.
-  if (!fs.existsSync(dir) || fs.statSync(dir).isFile()) {
+  if (!storage.ifPathIsValidAndNotFile(RelativePathToTargetNode)) {
     console.error("Please specify a valid directory.");
     return 1;
   }
 
-  var comments, files;
+  let comments, files;
 
   //If there is not a '.comments', pass in an empty array
-  if (storage.exists(dir)) {
-    comments = storage.loadComments(dir);
-    files = storage.loadFiles(dir);
+  if (storage.commentsFolderExists(RelativePathToTargetNode)) {
+    comments = storage.loadComments(RelativePathToTargetNode);
+    files = storage.loadFiles(RelativePathToTargetNode);
   } else {
     comments = [];
-    files = storage.loadFiles(dir);
+    files = storage.loadFiles(RelativePathToTargetNode);
   }
 
   /*If the current directory has no comment for itself, 
     look for one in the parent directory.*/
   if (!comments["."]) {
-    comments["."] = storage.returnCurrentDirectoryParentComment(dir);
+    comments["."] = storage.returnCurrentDirectoryParentComment(
+      RelativePathToTargetNode
+    );
   }
 
   //Prints the files and their comments.
-  helpers.printFileComments(files, comments, dir);
+  helpers.printFileComments(files, comments, RelativePathToTargetNode);
 
   return 0;
 };
 
 /** Lists only files with related `.comment` files.
- * @param {File} dir the current directory.
+ * @param {String} RelativePathToTargetNode The relative path of the
+ * node to list the contents of `.comments` directory.
  * @return {int} error code.
  */
-commands.filteredList = function (dir) {
-  if (!fs.existsSync(dir) || fs.statSync(dir).isFile()) {
+commands.filteredList = function (RelativePathToTargetNode) {
+  if (!storage.ifPathIsValidAndNotFile(RelativePathToTargetNode)) {
     console.error("Please specify a valid directory.");
     return 1;
   }
 
-  var comments, files;
+  let comments, files;
 
-  if (!storage.exists(dir)) {
+  if (!storage.commentsFolderExists(RelativePathToTargetNode)) {
     comments = [];
-    files = storage.loadFiles(dir);
+    files = storage.loadFiles(RelativePathToTargetNode);
   } else {
-    files = storage.loadFiles(dir);
-    comments = storage.loadComments(dir);
+    files = storage.loadFiles(RelativePathToTargetNode);
+    comments = storage.loadComments(RelativePathToTargetNode);
   }
 
   helpers.printOnlyComments(files, comments);
@@ -80,49 +83,71 @@ commands.filteredList = function (dir) {
   return 0;
 };
 
+//TODO: fix setting comments in the parent directory (i.e. `c -s ../c "wow!"`)
+
 /** Adds a comment to a file or directory.
- * @param {String} node The name of the node to add a relevant `.comment`.
+ * @param {String} RelativePathToTargetNode The relative path of the
+ * node to set a relevant `.comment`.
  * @param {String} comment The comment to be written.
  * @return {int} error code.
  */
-commands.set = function (node, comment) {
+commands.set = function (RelativePathToTargetNode, comment) {
   //Checks if the file is invalid
-  if (!fs.existsSync(node)) {
+  if (!storage.ifPathIsValid(RelativePathToTargetNode)) {
     console.error("Please specify a valid directory or file.");
     return 1;
   }
 
-  //If 'node' is valid and has characters, ensure it is case correct
-  if (node != "./" && node != "../" && node != "." && node != "..") {
-    const pathUpTo = path.resolve("./"); //Get the relative path up to the node
-    const trueFile = trueCasePathSync(node, pathUpTo); //Get the case sensitive version of the absolute path
-    node = trueFile.replace(pathUpTo, "").slice(1); //Return case sensitive relative path
+  /*If 'RelativePathToTargetNode' isn't the working directory 
+  or it's parent, ensure it is case correct (for *nix)*/
+  if (
+    RelativePathToTargetNode != "./" &&
+    RelativePathToTargetNode != "../" &&
+    RelativePathToTargetNode != "." &&
+    RelativePathToTargetNode != ".."
+  ) {
+    const workingDirectoryFullPath = path.resolve("./");
+    const caseSensitiveFilePath = trueCasePathSync(
+      RelativePathToTargetNode,
+      workingDirectoryFullPath
+    );
+
+    RelativePathToTargetNode = caseSensitiveFilePath
+      .replace(workingDirectoryFullPath, "")
+      .slice(1);
   }
 
-  storage.set(node, comment);
-  console.log(
-    `"${colors.cyan(comment)}" was applied to "${colors.cyan(
-      node
-    )}" successfully.`
-  );
-
-  return 0;
+  //If setting the comment file fails, log there was a failure.
+  if (!storage.setCommentFile(RelativePathToTargetNode, comment)) {
+    console.log(
+      `"${colors.cyan(comment)}" was applied to "${colors.cyan(
+        RelativePathToTargetNode
+      )}" successfully.`
+    );
+    return 0;
+  } else {
+    console.log(`There was an error writing the comment. Try again.`);
+    return 1;
+  }
 };
 
 /** Removes a comment from a file.
- * @param {File} file The name of the file to remove the relevant `.comment`.
+ * @param {String} RelativePathToTargetNode The relative path of the
+ * node to delete a relevant `.comment`.
  * @return {int} error code.
  */
-commands.delete = function (file) {
-  //Checks if the file is invalid.
-  if (!fs.existsSync(file)) {
+commands.delete = function (RelativePathToTargetNode) {
+  //Checks if the RelativePathToTargetNode is invalid.
+  if (!storage.ifPathIsValid(RelativePathToTargetNode)) {
     console.error("Please specify a valid file or directory.");
     return 1;
   }
-  if (storage.delete(file) == 1) {
-    console.log(`No comment to be deleted for "${file}"`);
+  if (storage.delete(RelativePathToTargetNode) == 1) {
+    console.log(`No comment to be deleted for "${RelativePathToTargetNode}"`);
   } else {
-    console.log(file + " comment was deleted successfully.");
+    console.log(
+      RelativePathToTargetNode + " comment was deleted successfully."
+    );
   }
 
   return 0;

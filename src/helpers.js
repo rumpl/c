@@ -22,7 +22,7 @@ const PADDING = " "; //Change this value for what character should present your 
  * @param {int} maxLine The length of the longest node name in the specified directory.
  * @param {String} dir the relative filepath to a directory, the contents of which will be listed.
  */
-var print = function (nodeName, nodeComment, maxLine, dir) {
+function print(nodeName, nodeComment, maxLine, dir) {
   nodeComment = nodeComment || "";
   nodeComment = nodeComment.replace(/(\r\n|\n|\r)/gm, " "); //Removes any new lines with blank spaces.
   let pad;
@@ -39,7 +39,7 @@ var print = function (nodeName, nodeComment, maxLine, dir) {
       colors.brightCyan(nodeName + "/") + pad + colors.yellow(nodeComment)
     );
   }
-};
+}
 
 /**Prints all of the files and sub-directories of a specified directory, as well as their assigned comments.
  * @param {String} files An array of all of the file names in the specified directory.
