@@ -1,7 +1,7 @@
 {
   "name": "c",
   "description": "Set and remove comments from files and directories, and view them from the command line.",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "homepage": "https://github.com/rumpl/c",
   "author": {
     "name": "Djordje Lukic",
