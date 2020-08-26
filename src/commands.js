@@ -42,6 +42,15 @@ commands.list = function (dir) {
     files = storage.loadFiles(dir);
   }
 
+  /*TODO: if the current dir changes it's 
+  definition for itself, mirror that in parent dir*/
+
+  /*If the current directory has no comment for itself, 
+    look for one in the parent directory.*/
+  if (!comments["."]) {
+    comments["."] = storage.returnCurrentDirectoryParentComment(dir);
+  }
+
   //Prints the files and their comments.
   helpers.printFileComments(files, comments, dir);
 };

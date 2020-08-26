@@ -22,6 +22,7 @@ const EXTENSION = ".comment";
 /** Sets a `.comment` file for a specific file.
  * @param {File} file a provided directory from the file tree.
  * @param {String} comment The comment to be written.
+ * @returns {void} Exit the program.
  */
 storage.set = function (file, comment) {
   //Check if `.comments` exists, makes it if not.
@@ -39,6 +40,7 @@ storage.set = function (file, comment) {
 
 /**Deletes a `.comment` file, and deletes `.comments` if it is left empty.
  * @param {File} file The name of the file whose `.comment` needs to be deleted.
+ * @returns {int} 0 if successful, 1 if unsuccesful.
  */
 storage.delete = function (file) {
   //If there is no `.comments` directory...
@@ -64,8 +66,8 @@ storage.delete = function (file) {
 };
 
 /**Checks if `.comments` exists.
- * @param {File} dir a provided directory from the file tree.
- * @returns true if `.comments` is present in the directory.
+ * @param {File} dir the path to the current directory.
+ * @returns {Boolean} true if `.comments` is present in the directory.
  * */
 storage.exists = function (dir) {
   var exists = fs.existsSync(path.join(dir, DIRECTORY));
@@ -95,8 +97,8 @@ storage.loadFiles = function (dir) {
 };
 
 /** Loads the comments of all files & directories in the current directory.
- * @param {File} dir a provided directory from the file tree.
- * @returns An array of comments.
+ * @param {string} dir the path to the current directory.
+ * @returns {array} A string array of comments.
  */
 storage.loadComments = function (dir) {
   var comments = [];
@@ -111,13 +113,40 @@ storage.loadComments = function (dir) {
   return comments;
 };
 
-/** Gets a single `.comment` file from `.comments`.
+//TODO: as below, for ../ directory?
+
+/** A function which returns the comment associated with the current
+ *  directory from it's the parent directory.
+ *  @param {string} dir the path to the current directory.
+ *  @returns {string} The comment associated with the directory.
+ */
+storage.returnCurrentDirectoryParentComment = function (dir) {
+  const parentDir = path.join(dir, "../");
+  if (!storage.exists(parentDir)) {
+    return "";
+  }
+
+  /*Loads the comments from parentDir into array; returns what is found
+   in the space indexed by the directory name.*/
+  return storage.loadComments(parentDir)[getFileNameFromPath(dir)];
+};
+
+/** Gets a single `.comment` file path from `.comments`.
  * @param {File} file a provided filename from the file tree.
- * @returns parameter `file`'s equivalent `.comment` file.
+ * @returns {string} parameter `file`'s equivalent `.comment` file.
  */
 function getCommentsFile(file) {
   var dirname = path.dirname(file);
-  var filename = path.basename(file);
+  var filename = getFileNameFromPath(dir);
 
   return path.join(dirname, DIRECTORY, filename + EXTENSION);
+}
+
+/**From a valid filepath, returns the file the path refers to.
+ * For example, `getFileName("path/to/thisFile")` returns `thisFile`.
+ * @param {string} dir a valid filepath.
+ * @returns {string} the filename the path refers to.
+ */
+function getFileNameFromPath(dir) {
+  return path.basename(path.resolve(dir));
 }
