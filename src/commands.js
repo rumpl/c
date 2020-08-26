@@ -23,12 +23,13 @@ var commands = module.exports;
 
 /**Lists all `.comment` files available within `.comments`.
  * @param {String} dir the relative filepath to a directory, the content of which will be listed.
+ * * @return {int} error code.
  */
 commands.list = function (dir) {
   //Checks if the path is invalid OR a directory - returns if so.
   if (!fs.existsSync(dir) || fs.statSync(dir).isFile()) {
     console.error("Please specify a valid directory.");
-    return;
+    return 1;
   }
 
   var comments, files;
@@ -50,15 +51,18 @@ commands.list = function (dir) {
 
   //Prints the files and their comments.
   helpers.printFileComments(files, comments, dir);
+
+  return 0;
 };
 
 /** Lists only files with related `.comment` files.
  * @param {File} dir the current directory.
+ * @return {int} error code.
  */
 commands.filteredList = function (dir) {
   if (!fs.existsSync(dir) || fs.statSync(dir).isFile()) {
     console.error("Please specify a valid directory.");
-    return;
+    return 1;
   }
 
   var comments, files;
@@ -72,17 +76,20 @@ commands.filteredList = function (dir) {
   }
 
   helpers.printOnlyComments(files, comments);
+
+  return 0;
 };
 
 /** Adds a comment to a file or directory.
  * @param {String} node The name of the node to add a relevant `.comment`.
  * @param {String} comment The comment to be written.
+ * @return {int} error code.
  */
 commands.set = function (node, comment) {
   //Checks if the file is invalid
   if (!fs.existsSync(node)) {
     console.error("Please specify a valid directory or file.");
-    return;
+    return 1;
   }
 
   //If 'node' is valid and has characters, ensure it is case correct
@@ -98,25 +105,32 @@ commands.set = function (node, comment) {
       node
     )}" successfully.`
   );
+
+  return 0;
 };
 
 /** Removes a comment from a file.
  * @param {File} file The name of the file to remove the relevant `.comment`.
+ * @return {int} error code.
  */
 commands.delete = function (file) {
   //Checks if the file is invalid.
   if (!fs.existsSync(file)) {
     console.error("Please specify a valid file or directory.");
-    return;
+    return 1;
   }
   if (storage.delete(file) == 1) {
     console.log(`No comment to be deleted for "${file}"`);
   } else {
     console.log(file + " comment was deleted successfully.");
   }
+
+  return 0;
 };
 
-//Lists helper information.
+/**Lists helper information.
+ * @return {int} error code 0.
+ */
 commands.help = function () {
   console.log(`Usage: c [-l  | --list <DIRECTORY|FILE>]
          [-rm | --remove <DIRECTORY|FILE>]
@@ -130,16 +144,13 @@ Options:
   remove  | -rm    Deletes the comment for the file|directory.
   help    | -h     Shows the help menu.
   version | -v     States the version.\n`);
+  return 0;
 };
 
-//Lists the current version.
+/**Lists the current version.
+ * @return {int} error code 0.
+ */
 commands.version = function () {
   console.log("v" + pack.version);
-};
-
-/** Outputs a message stating that the flag is invalid.
- * @param {String} flag The flag provided.
- */
-commands.invalid = function (flag) {
-  console.log("Invalid flag " + flag + ".");
+  return 0;
 };

@@ -22,7 +22,7 @@ const [, , ...arg] = process.argv; //Gets command line arguments
  * Arg2 | Comment if required by function.    | <Flag dependant>
  */
 
-/**Add new arguments here!
+/** Add new arguments here!
  * * Object structure:
  * action    | String   | The `<string>` version of the flag.
  * shortFlag | String   | The `- <char>` version of the flag.
@@ -121,12 +121,15 @@ for (var option of options) {
   }
 }
 
-//Did not enter the if statement, was not valid
 error();
-return 1;
 
+/** Called if the provided command fails.
+ * @returns {int} error code 1.
+ */
 function error() {
   console.error(colors.red("\nInvalid flag, please try the following:\n"));
   //Show how to use `c`
   commands.help();
+
+  return 1;
 }
