@@ -30,6 +30,7 @@ storage.set = function (file, comment) {
     storage.create(path.dirname(file));
   }
 
+  //TODO: fix setting for . uses actual file name
   var commentsFile = getCommentsFile(file); //Gets the file path
   var id = fs.openSync(commentsFile, "a", "0644");
 
@@ -128,7 +129,9 @@ storage.returnCurrentDirectoryParentComment = function (dir) {
 
   /*Loads the comments from parentDir into array; returns what is found
    in the space indexed by the directory name.*/
-  return storage.loadComments(parentDir)[getFileNameFromPath(dir)];
+  return `[Parent] ${
+    storage.loadComments(parentDir)[getFileNameFromPath(dir)]
+  }`;
 };
 
 /** Gets a single `.comment` file path from `.comments`.
@@ -137,7 +140,7 @@ storage.returnCurrentDirectoryParentComment = function (dir) {
  */
 function getCommentsFile(file) {
   var dirname = path.dirname(file);
-  var filename = getFileNameFromPath(dir);
+  var filename = getFileNameFromPath(file);
 
   return path.join(dirname, DIRECTORY, filename + EXTENSION);
 }
