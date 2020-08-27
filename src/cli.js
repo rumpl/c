@@ -22,7 +22,7 @@ const [, , ...arg] = process.argv; //Gets command line arguments
  * Arg2 | Comment if required by function.    | <Flag dependant>
  */
 
-/** Add new arguments here!
+/**Add new arguments here!
  * * Object structure:
  * action    | String   | The `<string>` version of the flag.
  * shortFlag | String   | The `- <char>` version of the flag.
@@ -93,7 +93,7 @@ const options = [
   },
 ];
 
-/** This loops through each element of the options array defined above
+/**This loops through each element of the options array defined above
  *  It checks to see if the first command line argument corresponds to a long or short flag:
  *  If it does, it checks the length of the full command line argument provided
  *  If the length of the array equals the current options[] element's specified 'argCount' variable, it calls 'method' variable.
@@ -123,7 +123,7 @@ for (const option of options) {
 
 error();
 
-/** Called if the provided command fails.
+/**Called if the provided command fails.
  * @returns {int} error code 1.
  */
 function error() {

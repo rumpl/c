@@ -78,7 +78,7 @@ helpers.printOnlyComments = function (files, comments) {
   });
 };
 
-/**  Calculates the longest file name from all the returned files.
+/**Calculates the longest file name from all the returned files.
  * @param {String} files an array of all the file names in the specified directory.
  */
 function maxLength(files) {
