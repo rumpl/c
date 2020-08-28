@@ -88,26 +88,28 @@ storage.commentsFolderExists = function (absolutePathToTargetParent) {
 
 /**Loads the names of all files & directories in the
  *  current directory, EXCEPT `.comments` folder.
- * @param {String} path a valid file path. May be either relative or absolute.
+ * @param {String} filePath a valid file path. May
+ * be either relative or absolute.
  * @returns An array of filenames.
  */
-storage.loadFiles = function (path) {
-  return fs.readdirSync(path).filter((file) => {
+storage.loadFiles = function (filePath) {
+  return fs.readdirSync(filePath).filter((file) => {
     return file !== DIRECTORY;
   });
 };
 
 /**Loads the comments of all files & directories in the current directory.
- * @param {String} path a valid file path. May be either relative or absolute.
+ * @param {String} filePath a valid file path. May
+ * be either relative or absolute.
  * @returns {array} A string array of comments.
  */
-storage.loadComments = function (path) {
+storage.loadComments = function (filePath) {
   let comments = [];
-  const commentDir = fs.readdirSync(path.join(path, DIRECTORY));
+  const commentDir = fs.readdirSync(path.join(filePath, DIRECTORY));
 
   commentDir.forEach(function (file) {
     comments[path.basename(file, EXTENSION)] = fs
-      .readFileSync(path.join(path, DIRECTORY, file))
+      .readFileSync(path.join(filePath, DIRECTORY, file))
       .toString();
   });
 
@@ -116,11 +118,12 @@ storage.loadComments = function (path) {
 
 /**Fetches the comment associated with the current
 directory from it's parent directory.
- * @param {String} path a valid file path. May be either relative or absolute.
+ * @param {String} filePath a valid file path. May 
+ be either relative or absolute.
  * @returns {String} The comment associated with the directory.
  */
-storage.returnCurrentDirectoryParentComment = function (path) {
-  const parentDir = path.join(path, "../");
+storage.returnCurrentDirectoryParentComment = function (filePath) {
+  const parentDir = path.join(filePath, "../");
 
   if (!storage.commentsFolderExists(parentDir)) {
     return "";
@@ -128,7 +131,9 @@ storage.returnCurrentDirectoryParentComment = function (path) {
 
   /*Loads the comments from parentDir into array; returns what is found
    in the space indexed by the directory name.*/
-  const comment = storage.loadComments(parentDir)[getFileNameFromPath(path)];
+  const comment = storage.loadComments(parentDir)[
+    getFileNameFromPath(filePath)
+  ];
 
   if (comment) {
     return `[Parent] ${comment}`;
@@ -208,9 +213,10 @@ function getCommentsFile(absolutePathToTarget) {
 
 /**From a valid filepath, returns the file the path refers to.
  * For example, `getFileName("path/to/thisFile")` returns `thisFile`.
- * @param {String} path a valid filepath, may be either relative or absolute.
+ * @param {String} filePath a valid filepath, may be
+ * either relative or absolute.
  * @returns {String} the filename the path refers to.
  */
-function getFileNameFromPath(path) {
-  return path.basename(path.resolve(path));
+function getFileNameFromPath(filePath) {
+  return path.basename(path.resolve(filePath));
 }
