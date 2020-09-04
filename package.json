@@ -33,6 +33,7 @@
     "node": "~12.16.2"
   },
   "dependencies": {
+    "@types/node": "^14.6.4",
     "colors": "1.4.0",
     "true-case-path": "^2.2.1"
   },

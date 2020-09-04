@@ -9,127 +9,143 @@
  */
 
 "use strict";
-const commands = require("./commands");
+const commandFunctions = require("./commands");
 const colors = require("colors/safe");
 
 const [, , ...arg] = process.argv; //Gets command line arguments
-/**
- * * Argument structure:
- *
- * C    | program name.                       | <Required>
- * Arg0 | flag specifying function.           | <Required>
- * Arg1 | directory if required by function.  | <Flag dependant>
- * Arg2 | Comment if required by function.    | <Flag dependant>
- */
 
-/**Add new arguments here!
- * * Object structure:
- * action    | String   | The `<string>` version of the flag.
- * shortFlag | String   | The `- <char>` version of the flag.
- * argCount  | Int      | The number of arguments this flag takes (longFlag or shortFlag as arg[0]).
- * method    | Function | The method that should be called, including the arguments passed to it.
- * fallback  | Function | If there are not < arguments, use fallback.
- **/
-const options = [
-  //help
-  {
-    shortFlag: "-h",
-    action: "help",
-    argCount: 1, //Flag
-    method: () => {
-      commands.help();
+/** Creates objects - commands - which can be called from the command line. */
+class Command {
+  /**
+   * @param {string} shortFlag a short-form identifier for a command,
+   * beginning with '-'.
+   * @param {string} action a long-form identifier for a command.
+   * @param {number} argCount the number of arguments the command takes.
+   * @param {{ (): void; }} method the function, from the file `commands.js`,
+   * which executes this commands main logic.
+   * @param {{ (): void; (): never;  }} fallback a fallback function which is
+   * used if the number of arguments is equal to argCount - 1.
+   */
+  constructor(shortFlag, action, argCount, method, fallback) {
+    /** @property {string} shortFlag a short-form identifier for a command,
+     * beginning with '-'. */
+    this.shortFlag = shortFlag;
+
+    /** @property {string} action a long-form identifier for a command. */
+    this.action = action;
+
+    /** @property {number} argCount the number
+     * of arguments the command takes.*/
+    this.argCount = argCount;
+
+    /** @property {{ (): void; }} method the function, from the file
+     * `commands.js`, which executes this commands main logic. */
+    this.method = method;
+
+    /** @property {{ (): void; (): never;  }} fallback a fallback function
+     * which is used if the number of arguments is equal to argCount - 1. */
+    this.fallback = fallback;
+  }
+}
+
+/**An array storing all command objects.*/
+const commands = [
+  new Command( //Help command
+    "-h",
+    "help",
+    1,
+    () => {
+      commandFunctions.help();
     },
-    fallback: () => {
+    () => {
       error();
+      process.exit(1);
+    }
+  ),
+
+  new Command( //list command
+    "-l",
+    "list",
+    2,
+    () => {
+      commandFunctions.list(arg[1]);
+      process.exit(0);
     },
-  },
-  //version
-  {
-    shortFlag: "-v",
-    action: "version",
-    argCount: 1, //Flag
-    method: () => {
-      commands.version();
+    () => {
+      commandFunctions.list(".");
+      process.exit(0);
+    }
+  ),
+
+  new Command( //remove command
+    "-rm",
+    "remove",
+    2,
+    () => {
+      commandFunctions.delete(arg[1]);
+      process.exit(0);
     },
-    fallback: () => {
+    () => {
       error();
+      process.exit(1);
+    }
+  ),
+
+  new Command( //set command
+    "-s",
+    "set",
+    3,
+    () => {
+      commandFunctions.set(arg[1], arg[2]);
+      process.exit(0);
     },
-  },
-  //list
-  {
-    shortFlag: "-l",
-    action: "list",
-    argCount: 2, //Flag, Directory
-    method: () => {
-      commands.list(arg[1]);
-    },
-    fallback: () => {
-      commands.list(".");
-    },
-  },
-  //remove
-  {
-    shortFlag: "-rm",
-    action: "remove",
-    argCount: 2, //Flag, File|Directory
-    method: () => {
-      commands.delete(arg[1]);
-    },
-    fallback: () => {
+    () => {
       error();
+      process.exit(1);
+    }
+  ),
+
+  new Command( //Version command
+    "-v",
+    "version",
+    1,
+    () => {
+      commandFunctions.version();
+      process.exit(0);
     },
-  },
-  //set
-  {
-    shortFlag: "-s",
-    action: "set",
-    argCount: 3, //Flag, file|Directory, comment
-    method: () => {
-      commands.set(arg[1], arg[2]);
-    },
-    fallback: () => {
+    () => {
       error();
-    },
-  },
+      process.exit(1);
+    }
+  ),
 ];
 
-/**This loops through each element of the options array defined above
- *  It checks to see if the first command line argument corresponds to a long or short flag:
- *  If it does, it checks the length of the full command line argument provided
- *  If the length of the array equals the current options[] element's specified 'argCount' variable, it calls 'method' variable.
- *  * This simply passes the relevant arg parameters into the relevant method exported from 'commands.js'
- *  If the length of the array equals the current options[] element's specified 'argCount' variable minus 1, it calls the 'fallback' variable.
- *  * This passes the relevant arg parameters into the relevant method exported from 'commands.js', but with some default parameter provided.
- *  * For example, in the '-l' flag, if you provide 1 less parameter than default, it will automatically list the current directory.
- *  Otherwise it calls the 'error' function below.
- */
-for (const option of options) {
-  if (arg[0] == option.action || arg[0] == option.shortFlag) {
+/*Loops through each element of `commands` to 
+find what command was provided at the command line*/
+for (const command of commands) {
+  if (arg[0] == command.action || arg[0] == command.shortFlag) {
     switch (arg.length) {
-      //The number of arguments specified
-      case option.argCount:
-        option.method();
-        return 0;
-      //The number of arguments specified -1
-      case option.argCount - 1:
-        option.fallback();
-        return 0;
-      //Error behaviour
+      case command.argCount: //The number of arguments specified
+        command.method();
+        break;
+
+      case command.argCount - 1: //The number of arguments specified -1
+        command.fallback();
+        break;
+
       default:
         error();
     }
   }
 }
 
-error();
-
 /**Called if the provided command fails.
- * @returns {int} error code 1.
+ * @returns {number} error code 1.
  */
 function error() {
   console.error(colors.red("\nInvalid flag, please try the following:\n"));
   //Show how to use `c`
-  commands.help();
+  commandFunctions.help();
 
   return 1;
 }

@@ -21,10 +21,10 @@ const DIRECTORY = ".comments";
 const EXTENSION = ".comment";
 
 /**Sets a `.comment` file for a specific file.
- * @param {String} absolutePathToTarget the absolute path from the
+ * @param {string} absolutePathToTarget the absolute path from the
  * working directory to the target node.
- * @param {String} comment The comment to be written.
- * @returns {int} exit code.
+ * @param {string} comment The comment to be written.
+ * @returns {number} exit code.
  */
 storage.setCommentFile = function (absolutePathToTarget, comment) {
   //Check if `.comments` exists, makes it if not.
@@ -45,9 +45,9 @@ storage.setCommentFile = function (absolutePathToTarget, comment) {
 };
 
 /**Deletes a `.comment` file, and deletes `.comments` if it is left empty.
- * @param {String} absolutePathToTarget An absolute path to the
+ * @param {string} absolutePathToTarget An absolute path to the
  * target directory.
- * @returns {int} exit code.
+ * @returns {number} exit code.
  */
 storage.delete = function (absolutePathToTarget) {
   if (!storage.commentsFolderExists(path.dirname(absolutePathToTarget))) {
@@ -75,9 +75,9 @@ storage.delete = function (absolutePathToTarget) {
 };
 
 /**Checks if `.comments` exists.
- * @param {String} absolutePathToTargetParent the path to
+ * @param {string} absolutePathToTargetParent the path to
  * the parent of the target.
- * @returns {Boolean} true if `.comments` is present in the directory.
+ * @returns {boolean} true if `.comments` is present in the directory.
  * */
 storage.commentsFolderExists = function (absolutePathToTargetParent) {
   return (
@@ -88,7 +88,7 @@ storage.commentsFolderExists = function (absolutePathToTargetParent) {
 
 /**Loads the names of all files & directories in the
  *  current directory, EXCEPT `.comments` folder.
- * @param {String} filePath a valid file path. May
+ * @param {string} filePath a valid file path. May
  * be either relative or absolute.
  * @returns An array of filenames.
  */
@@ -99,7 +99,7 @@ storage.loadFiles = function (filePath) {
 };
 
 /**Loads the comments of all files & directories in the current directory.
- * @param {String} filePath a valid file path. May
+ * @param {string} filePath a valid file path. May
  * be either relative or absolute.
  * @returns {array} A string array of comments.
  */
@@ -118,9 +118,9 @@ storage.loadComments = function (filePath) {
 
 /**Fetches the comment associated with the current
 directory from it's parent directory.
- * @param {String} filePath a valid file path. May 
+ * @param {string} filePath a valid file path. May 
  be either relative or absolute.
- * @returns {String} The comment associated with the directory.
+ * @returns {string} The comment associated with the directory.
  */
 storage.returnCurrentDirectoryParentComment = function (filePath) {
   const parentDir = path.join(filePath, "../");
@@ -144,9 +144,9 @@ storage.returnCurrentDirectoryParentComment = function (filePath) {
 
 /**Fetches the comment associated with the current
 directory from it's parent directory.
- * @param {String} relativePathToTarget the relative path from the 
+ * @param {string} relativePathToTarget the relative path from the 
  * current directory to the target directory.
- * @returns {String} The comment associated with the directory.
+ * @returns {string} The comment associated with the directory.
  */
 storage.returnCurrentDirectoryGrandparentComment = function (
   relativePathToTarget
@@ -171,8 +171,8 @@ storage.returnCurrentDirectoryGrandparentComment = function (
 };
 
 /**Finds out if the provided path is valid.
- * @param {String} relativePathToTarget Relative file path.
- * @returns {Boolean} if the path exists.
+ * @param {string} relativePathToTarget Relative file path.
+ * @returns {boolean} if the path exists.
  */
 storage.ifPathIsValid = function (relativePathToTarget) {
   return fs.existsSync(relativePathToTarget);
@@ -180,7 +180,7 @@ storage.ifPathIsValid = function (relativePathToTarget) {
 
 /**Finds out if the provided path is valid & not a file.
  * @param {string} relativePathToTarget Relative file path.
- * @returns {Boolean} if the path exists & is not a file.
+ * @returns {boolean} if the path exists & is not a file.
  */
 storage.ifPathIsValidAndNotFile = function (relativePathToTarget) {
   return (
@@ -190,9 +190,9 @@ storage.ifPathIsValidAndNotFile = function (relativePathToTarget) {
 };
 
 /**Creates a `.comments` directory.
- * @param {String} absolutePathToParent a relative directory from the
+ * @param {string} absolutePathToParent a relative directory from the
  * working directory to the target files directory.
- * @returns {int} exit code.
+ * @returns {number} exit code.
  */
 function createCommentsFolder(absolutePathToParent) {
   fs.mkdirSync(path.join(absolutePathToParent, DIRECTORY), "0755");
@@ -200,8 +200,8 @@ function createCommentsFolder(absolutePathToParent) {
 }
 
 /**Gets a single `.comment` file path from `.comments`.
- * @param {String} absolutePathToTarget a provided filename from the file tree.
- * @returns {String} parameter `file`'s equivalent `.comment` file.
+ * @param {string} absolutePathToTarget a provided filename from the file tree.
+ * @returns {string} parameter `file`'s equivalent `.comment` file.
  */
 function getCommentsFile(absolutePathToTarget) {
   console.log(absolutePathToTarget);
@@ -213,9 +213,9 @@ function getCommentsFile(absolutePathToTarget) {
 
 /**From a valid filepath, returns the file the path refers to.
  * For example, `getFileName("path/to/thisFile")` returns `thisFile`.
- * @param {String} filePath a valid filepath, may be
+ * @param {string} filePath a valid filepath, may be
  * either relative or absolute.
- * @returns {String} the filename the path refers to.
+ * @returns {string} the filename the path refers to.
  */
 function getFileNameFromPath(filePath) {
   return path.basename(path.resolve(filePath));

@@ -20,10 +20,12 @@ const { trueCasePathSync } = require("true-case-path");
 
 const commands = module.exports;
 
+//TODO: refactor list & filteredList into one function - they're almost identical for the most part
+
 /**Lists all `.comment` files available within `.comments`.
- * @param {String} relativePathToTarget The relative path from the
+ * @param {string} relativePathToTarget The relative path from the
  * current directory to the target directory.
- * @return {int} error code.
+ * @return {number} error code.
  */
 commands.list = function (relativePathToTarget) {
   //Checks if the path is invalid OR a directory - returns if so.
@@ -32,15 +34,15 @@ commands.list = function (relativePathToTarget) {
     return 1;
   }
 
-  let comments, files;
+  let comments, filesNames;
 
   //If there is not a '.comments', pass in an empty array
   if (storage.commentsFolderExists(relativePathToTarget)) {
     comments = storage.loadComments(relativePathToTarget);
-    files = storage.loadFiles(relativePathToTarget);
+    filesNames = storage.loadFiles(relativePathToTarget);
   } else {
     comments = [];
-    files = storage.loadFiles(relativePathToTarget);
+    filesNames = storage.loadFiles(relativePathToTarget);
   }
 
   /*If the current directory has no comment for itself, 
@@ -57,18 +59,18 @@ commands.list = function (relativePathToTarget) {
     comments[".."] = storage.returnCurrentDirectoryGrandparentComment(
       relativePathToTarget
     );
-
-    //Prints the files and their comments.
-    helpers.printFileComments(files, comments, relativePathToTarget);
-
-    return 0;
   }
+
+  //Prints the files and their comments.
+  helpers.printFileComments(filesNames, comments, relativePathToTarget);
+
+  return 0;
 };
 
 /**Lists only files with related `.comment` files.
- * @param {String} relativePathToTarget The relative path of the
+ * @param {string} relativePathToTarget The relative path of the
  * node to list the contents of `.comments` directory.
- * @return {int} error code.
+ * @return {number} error code.
  */
 commands.filteredList = function (relativePathToTarget) {
   if (!storage.ifPathIsValidAndNotFile(relativePathToTarget)) {
@@ -76,26 +78,42 @@ commands.filteredList = function (relativePathToTarget) {
     return 1;
   }
 
-  let comments, files;
+  let comments, fileNames;
 
   if (!storage.commentsFolderExists(relativePathToTarget)) {
     comments = [];
-    files = storage.loadFiles(relativePathToTarget);
+    fileNames = storage.loadFiles(relativePathToTarget);
   } else {
-    files = storage.loadFiles(relativePathToTarget);
+    fileNames = storage.loadFiles(relativePathToTarget);
     comments = storage.loadComments(relativePathToTarget);
   }
 
-  helpers.printOnlyComments(files, comments);
+  /*If the current directory has no comment for itself, 
+    look for one in the parent directory.*/
+  if (!comments["."]) {
+    comments["."] = storage.returnCurrentDirectoryParentComment(
+      relativePathToTarget
+    );
+  }
+
+  /*If the current directory has no comment for it's parent,
+  look for one in the grandparent directory.*/
+  if (!comments[".."]) {
+    comments[".."] = storage.returnCurrentDirectoryGrandparentComment(
+      relativePathToTarget
+    );
+  }
+
+  helpers.printOnlyComments(fileNames, comments, relativePathToTarget);
 
   return 0;
 };
 
 /**Adds a comment to a file or directory.
- * @param {String} relativePathToTarget The relative path of the
+ * @param {string} relativePathToTarget The relative path of the
  * node to set a relevant `.comment`.
- * @param {String} comment The comment to be written.
- * @return {int} error code.
+ * @param {string} comment The comment to be written.
+ * @return {number} error code.
  */
 commands.set = function (relativePathToTarget, comment) {
   //Checks if the file is invalid
@@ -125,9 +143,9 @@ commands.set = function (relativePathToTarget, comment) {
 };
 
 /**Removes a comment from a file.
- * @param {String} relativePathToTarget The relative path of the
+ * @param {string} relativePathToTarget The relative path of the
  * node to delete a relevant `.comment`.
- * @return {int} error code.
+ * @return {number} error code.
  */
 commands.delete = function (relativePathToTarget) {
   if (!storage.ifPathIsValid(relativePathToTarget)) {
@@ -157,7 +175,7 @@ commands.delete = function (relativePathToTarget) {
 };
 
 /**Lists helper information.
- * @return {int} error code 0.
+ * @return {number} error code 0.
  */
 commands.help = function () {
   console.log(`Usage: c [-l  | --list <DIRECTORY|FILE>]
@@ -176,7 +194,7 @@ Options:
 };
 
 /**Lists the current version.
- * @return {int} error code 0.
+ * @return {number} error code 0.
  */
 commands.version = function () {
   console.log("v" + pack.version);
