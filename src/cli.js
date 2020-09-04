@@ -56,6 +56,7 @@ const commands = [
     1,
     () => {
       commandFunctions.help();
+      process.exit(0);
     },
     () => {
       error();
@@ -138,6 +139,8 @@ for (const command of commands) {
     }
   }
 }
+
+error();
 
 /**Called if the provided command fails.
  * @returns {number} error code 1.
