@@ -36,7 +36,7 @@ Install the module globally with `npm install c -g`.
 
 ### `-s` or `set` **and** `-l` or `list`
 
-![Setting and listing comments gif](resources/ListandSet.gif)
+![Setting and listing comments gif](http://raw.githubusercontent.com/rumpl/c/master/resources/ListandSet.gif)
 
 #### **Example:**
 
@@ -70,7 +70,7 @@ Install the module globally with `npm install c -g`.
 
 ### `-rm` or `remove`
 
-![Removing comments gif](resources/Deleting.gif)
+![Removing comments gif](http://raw.githubusercontent.com/rumpl/c/master/resources/Deleting.gif)
 
 #### **Example:**
 
@@ -90,13 +90,13 @@ Install the module globally with `npm install c -g`.
 
 ### `-v` or `version` **and** `-h` or `help`
 
-![Alternative operations gif](resources/other.gif)
+![Alternative operations gif](http://raw.githubusercontent.com/rumpl/c/master/resources/other.gif)
 
 ---
 
 ### Operating in child and parent directories
 
-![Complex usage demo gif](resources/NestedWorking.gif)
+![Complex usage demo gif](http://raw.githubusercontent.com/rumpl/c/master/resources/NestedWorking.gif)
 
 ## Releasing
 

@@ -1,8 +1,19 @@
 {
   "name": "c",
+  "version": "1.1.0",
   "description": "Set and remove comments from files and directories, and view them from the command line.",
-  "version": "1.0.2",
+  "keywords": [
+    "File system",
+    "Comments",
+    "File descriptions",
+    "CLI",
+    "Global"
+  ],
   "homepage": "https://github.com/rumpl/c",
+  "bugs": {
+    "url": "https://github.com/rumpl/c/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Djordje Lukic",
     "email": "lukic.djordje@gmail.com",
@@ -15,22 +26,11 @@
       "url": "https://www.github.com/LawrenceWarren"
     }
   ],
+  "main": "./src/cli.js",
+  "bin": "./src/cli.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/rumpl/c.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rumpl/c/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/rumpl/c/blob/master/LICENSE-MIT"
-    }
-  ],
-  "main": "./src/cli.js",
-  "engines": {
-    "node": "~12.16.2"
   },
   "dependencies": {
     "@types/node": "^14.6.4",
@@ -38,12 +38,7 @@
     "true-case-path": "^2.2.1"
   },
   "devDependencies": {},
-  "keywords": [
-    "File system",
-    "Comments",
-    "File descriptions",
-    "CLI",
-    "Global"
-  ],
-  "bin": "./src/cli.js"
+  "engines": {
+    "node": "~12.16.2"
+  }
 }
