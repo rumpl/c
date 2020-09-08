@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* For testing no exported functions, see https://bit.ly/3jSFQ8s */
 /* Capturing console logs, see https://glebbahmutov.com/blog/capture-all-the-logs/ */
 /* Writing tests, see 
@@ -75,8 +76,8 @@ afterEach(() => {});
 //createCommentsFolder()
 describe("Tests `createCommentsFolder()`: ", () => {
   it("Creates a `.comments` folder in `./test/pathTesting/`", () => {
-    assert.equal(createCommentsFolder("./test/pathTesting/"), 0);
-    assert.equal(
+    assert.strictEqual(createCommentsFolder("./test/pathTesting/"), 0);
+    assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/.comments/"),
       true
     );
@@ -86,53 +87,68 @@ describe("Tests `createCommentsFolder()`: ", () => {
 //setCommentsFile()
 describe("Tests `setCommentFile()`: ", () => {
   it("Set's a `.comment` file where `.comments` doesn't exists", () => {
-    storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
+    assert.strictEqual(
+      storage.setCommentFile("./test/pathTesting/test1.txt", "demo"),
+      0
+    );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test1.txt.comment"),
       true
     );
   });
 
   it("Set's a `.comment` file where `.comments` does exists", () => {
-    assert.equal(createCommentsFolder("./test/pathTesting"), 0);
+    assert.strictEqual(createCommentsFolder("./test/pathTesting"), 0);
 
-    assert.equal(
+    assert.strictEqual(
       storage.setCommentFile("./test/pathTesting/test2.txt", "demo"),
       0
     );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test2.txt.comment"),
       true
     );
   });
 
   it("Set's a `.comment` file for `./` in `./`'s parent", () => {
-    storage.setCommentFile("./test/pathTesting/nested", "demo");
+    assert.strictEqual(
+      storage.setCommentFile("./test/pathTesting/nested", "demo"),
+      0
+    );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/nested.comment"),
       true
     );
   });
 
-  //Failing!
   it("Set's a `.comment` file for `../` in `./`'s grandparent", () => {
-    storage.setCommentFile(
-      path.resolve("./test/pathTesting/nested/doubleNest/../"),
-      "demo"
+    assert.strictEqual(
+      storage.setCommentFile(
+        path.resolve("./test/pathTesting/nested/doubleNest/../"),
+        "demo"
+      ),
+      0
     );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/nested.comment"),
       true
     );
   });
 
   it("Writes the correct value into a `.comment` file", () => {
-    //TODO: write this test
-    assert.equal(1, 2);
+    assert.strictEqual(
+      storage.setCommentFile("./test/pathTesting/test1.txt", "demo"),
+      0
+    );
+
+    assert.strictEqual(
+      fs.readFileSync("./test/pathTesting/.comments/test1.txt.comment", "utf8"),
+      "demo\n"
+    );
   });
 });
 
@@ -141,51 +157,51 @@ describe("Tests `deleteSingleCommentFile()`: ", () => {
   it("Deletes a `.comment` and keeps it's `.comments`", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo");
-    assert.equal(
+    assert.strictEqual(
       storage.deleteSingleCommentFile("./test/pathTesting/test1.txt"),
       0
     );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test1.txt.comment"),
       false
     );
 
-    assert.equal(fs.existsSync("./test/pathTesting/.comments"), true);
+    assert.strictEqual(fs.existsSync("./test/pathTesting/.comments"), true);
   });
 
   it("Deletes a `.comment` and removes it's `.comments`", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
-    assert.equal(
+    assert.strictEqual(
       storage.deleteSingleCommentFile("./test/pathTesting/test1.txt"),
       0
     );
 
-    assert.equal(
+    assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test1.txt.comment"),
       false
     );
 
-    assert.equal(fs.existsSync("./test/pathTesting/.comments"), false);
+    assert.strictEqual(fs.existsSync("./test/pathTesting/.comments"), false);
   });
 
   it("Fails when given a valid file path with no corresponding `.comment`", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
-    assert.equal(
+    assert.strictEqual(
       storage.deleteSingleCommentFile("./test/pathTesting/test2.txt"),
       1
     );
   });
 
   it("Fails when given a valid file path with no corresponding `.comments`", () => {
-    assert.equal(
+    assert.strictEqual(
       storage.deleteSingleCommentFile("./test/pathTesting/test2.txt"),
       1
     );
   });
 
   it("Fails when given an invalid directory", () => {
-    assert.equal(
+    assert.strictEqual(
       storage.deleteSingleCommentFile("./fakePath/fakerPath.fake"),
       1
     );
@@ -205,39 +221,48 @@ describe("Tests `deleteSingleCommentFile()`: ", () => {
 //IfPathIsValid()
 describe("Tests `ifPathIsValid()`: ", () => {
   it("returns false with an invalid path", () => {
-    assert.equal(storage.ifPathIsValid("./fakePath/fakeFile.fake"), false);
+    assert.strictEqual(
+      storage.ifPathIsValid("./fakePath/fakeFile.fake"),
+      false
+    );
   });
 
   it("returns true with a valid path", () => {
-    assert.equal(storage.ifPathIsValidAndNotFile("./test/pathTesting/"), true);
+    assert.strictEqual(
+      storage.ifPathIsValidAndNotFile("./test/pathTesting/"),
+      true
+    );
   });
 });
 
 //ifPathIsValidAndNotFile()
 describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
   it("returns false with an invalid non-file path", () => {
-    assert.equal(
+    assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./fakePath/fakeFile.fake"),
       false
     );
   });
 
   it("returns false with an invalid file path", () => {
-    assert.equal(
+    assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./fakePath/fakerPath/"),
       false
     );
   });
 
   it("returns false with a valid file path", () => {
-    assert.equal(
+    assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/test1.txt"),
       false
     );
   });
 
   it("returns true with a valid non-file path", () => {
-    assert.equal(storage.ifPathIsValidAndNotFile("./test/pathTesting/"), true);
+    assert.strictEqual(
+      storage.ifPathIsValidAndNotFile("./test/pathTesting/"),
+      true
+    );
   });
 });
 

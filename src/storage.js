@@ -87,7 +87,7 @@ storage.commentsFolderExists = function (absolutePathToTargetParent) {
 };
 
 /**Loads the names of all files & directories in the
- *  current directory, EXCEPT `.comments` folder.
+ * current directory, EXCEPT `.comments` folder.
  * @param {string} filePath a valid file path. May
  * be either relative or absolute.
  * @returns An array of filenames.
