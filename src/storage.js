@@ -49,7 +49,7 @@ storage.setCommentFile = function (absolutePathToTarget, comment) {
  * target directory.
  * @returns {number} exit code.
  */
-storage.delete = function (absolutePathToTarget) {
+storage.deleteSingleCommentFile = function (absolutePathToTarget) {
   if (!storage.commentsFolderExists(path.dirname(absolutePathToTarget))) {
     return 1;
   }
@@ -57,7 +57,7 @@ storage.delete = function (absolutePathToTarget) {
   const commentsFile = getCommentsFilePath(absolutePathToTarget);
 
   //If the `file.comment` does not exist...
-  if (!fs.existsSync(commentsFile)) {
+  if (!storage.ifPathIsValid(commentsFile)) {
     return 1;
   }
 
@@ -81,7 +81,7 @@ storage.delete = function (absolutePathToTarget) {
  * */
 storage.commentsFolderExists = function (absolutePathToTargetParent) {
   return (
-    fs.existsSync(path.join(absolutePathToTargetParent, DIRECTORY)) &&
+    storage.ifPathIsValid(path.join(absolutePathToTargetParent, DIRECTORY)) &&
     fs.statSync(absolutePathToTargetParent).isDirectory()
   );
 };
@@ -184,7 +184,7 @@ storage.ifPathIsValid = function (relativePathToTarget) {
  */
 storage.ifPathIsValidAndNotFile = function (relativePathToTarget) {
   return (
-    fs.existsSync(relativePathToTarget) &&
+    storage.ifPathIsValid(relativePathToTarget) &&
     !fs.statSync(relativePathToTarget).isFile()
   );
 };
