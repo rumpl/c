@@ -33,7 +33,7 @@ storage.setCommentFile = function (absolutePathToTarget, comment) {
   }
 
   const fileObject = fs.openSync(
-    getCommentsFile(absolutePathToTarget),
+    getCommentsFilePath(absolutePathToTarget),
     "a",
     "0644"
   );
@@ -54,7 +54,7 @@ storage.delete = function (absolutePathToTarget) {
     return 1;
   }
 
-  const commentsFile = getCommentsFile(absolutePathToTarget);
+  const commentsFile = getCommentsFilePath(absolutePathToTarget);
 
   //If the `file.comment` does not exist...
   if (!fs.existsSync(commentsFile)) {
@@ -203,7 +203,7 @@ function createCommentsFolder(absolutePathToParent) {
  * @param {string} absolutePathToTarget a provided filename from the file tree.
  * @returns {string} parameter `file`'s equivalent `.comment` file.
  */
-function getCommentsFile(absolutePathToTarget) {
+function getCommentsFilePath(absolutePathToTarget) {
   const dirname = path.dirname(absolutePathToTarget);
   const filename = getFileNameFromPath(absolutePathToTarget);
 
