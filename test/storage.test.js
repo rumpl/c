@@ -11,6 +11,7 @@ const fs = require("fs");
 const app = rewire("../src/storage.js");
 const createCommentsFolder = app.__get__("createCommentsFolder");
 
+//Before
 beforeEach(() => {
   //If pathTesting/ does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/")) {
@@ -36,16 +37,71 @@ beforeEach(() => {
   }
 });
 
+//after
 afterEach(() => {
+  //!If .comments/ is populated, delete it's children
+  //test1.txt.comment
+  if (fs.existsSync("./test/pathTesting/.comments/test1.txt.comment")) {
+    fs.unlinkSync("./test/pathTesting/.comments/test1.txt.comment");
+  }
+
+  //nested.comment
+  if (fs.existsSync("./test/pathTesting/.comments/nested.comment")) {
+    fs.unlinkSync("./test/pathTesting/.comments/nested.comment");
+  }
+
   //If .comments/ exists, delete it
   if (fs.existsSync("./test/pathTesting/.comments")) {
     fs.rmdirSync("./test/pathTesting/.comments");
   }
 });
 
-//TODO: test setCommentFile()
+//createCommentsFolder()
+describe("Tests `createCommentsFolder()`: ", () => {
+  it("Creates a `.comments` folder in `./test/pathTesting/`.", () => {
+    assert.equal(createCommentsFolder("./test/pathTesting/"), 0);
+    assert.equal(
+      storage.ifPathIsValidAndNotFile("./test/pathTesting/.comments/"),
+      true
+    );
+  });
+});
 
-//TODO: test delete()
+//setCommentsFile()
+describe("Tests `setCommentsFile()`: ", () => {
+  it("Set's a `.comment` file.", () => {
+    storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
+
+    assert.equal(
+      fs.existsSync("./test/pathTesting/.comments/test1.txt.comment"),
+      true
+    );
+  });
+
+  it("Set's a `.comment` file for `./` in `./`'s parent.", () => {
+    storage.setCommentFile("./test/pathTesting/nested", "demo");
+
+    assert.equal(
+      fs.existsSync("./test/pathTesting/.comments/nested.comment"),
+      true
+    );
+  });
+});
+
+//delete()
+describe("Tests `delete()`: ", () => {
+  it("Deletes a `.comment`.", () => {
+    //TODO: Write me
+  });
+
+  it("Deletes a `.comment` and it's parent `.comments` (now empty).", () => {
+    //TODO: Write me
+  });
+
+  it("Fails when given an invalid path.", () => {
+    //TODO: Write me
+  });
+});
 
 //TODO: test commentsFolderExists()
 
@@ -95,19 +151,6 @@ describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
     assert.equal(storage.ifPathIsValidAndNotFile("./test/pathTesting/"), true);
   });
 });
-
-//createCommentsFolder()
-describe("Tests `createCommentsFolder()`: ", () => {
-  it("Creates a `.comments` folder in `./test/pathTesting/`.", () => {
-    assert.equal(createCommentsFolder("./test/pathTesting/"), 0);
-    assert.equal(
-      storage.ifPathIsValidAndNotFile("./test/pathTesting/.comments/"),
-      true
-    );
-  });
-});
-
-//TODO: test createCommentsFolder()
 
 //TODO: test getCommentsFilePath()
 
