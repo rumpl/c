@@ -45,6 +45,9 @@ commands.list = function (relativePathToTarget) {
     filesNames = storage.loadFiles(relativePathToTarget);
   }
 
+  filesNames.unshift("..");
+  filesNames.unshift(".");
+
   /*If the current directory has no comment for itself, 
     look for one in the parent directory.*/
   if (!comments["."]) {
@@ -161,7 +164,7 @@ commands.delete = function (relativePathToTarget) {
     path.join("./", relativePathToTarget)
   );
 
-  if (storage.delete(absolutePathToTarget)) {
+  if (storage.deleteSingleCommentFile(absolutePathToTarget)) {
     console.log(
       `No comment to be deleted for ${colors.cyan(relativePathToTarget)}.`
     );
