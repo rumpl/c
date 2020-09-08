@@ -204,7 +204,6 @@ function createCommentsFolder(absolutePathToParent) {
  * @returns {string} parameter `file`'s equivalent `.comment` file.
  */
 function getCommentsFile(absolutePathToTarget) {
-  console.log(absolutePathToTarget);
   const dirname = path.dirname(absolutePathToTarget);
   const filename = getFileNameFromPath(absolutePathToTarget);
 
