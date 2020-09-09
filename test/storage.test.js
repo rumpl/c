@@ -9,6 +9,7 @@ const rewire = require("rewire");
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const expect = require("chai").expect;
 
 const app = rewire("../src/storage.js");
 const createCommentsFolder = app.__get__("createCommentsFolder");
@@ -54,8 +55,17 @@ beforeEach(() => {
     fs.unlinkSync("./test/pathTesting/.comments/test1.txt.comment");
   }
 
+  //test2.txt.comment
   if (fs.existsSync("./test/pathTesting/.comments/test2.txt.comment")) {
     fs.unlinkSync("./test/pathTesting/.comments/test2.txt.comment");
+  }
+
+  //.comments (file)
+  if (
+    fs.existsSync("./test/pathTesting/.comments") &&
+    !fs.statSync("./test/pathTesting/.comments").isDirectory()
+  ) {
+    fs.unlinkSync("./test/pathTesting/.comments");
   }
 
   //nested.comment
@@ -208,9 +218,58 @@ describe("Tests `deleteSingleCommentFile()`: ", () => {
   });
 });
 
-//TODO: test commentsFolderExists()
+//commentsFolderExists()
+describe("Tests `commentsFolderExists()`:", () => {
+  it("Returns true when given path to a `.comments` directory", () => {
+    assert.strictEqual(createCommentsFolder("./test/pathTesting/"), 0);
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting/"),
+      true
+    );
+  });
 
-//TODO: test loadFiles()
+  it("Returns false when given an invalid path", () => {
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting/"),
+      false
+    );
+  });
+
+  it("Returns false when given a path to a file called `.comments`", () => {
+    let file = fs.openSync("./test/pathTesting/.comments", "a");
+    fs.closeSync(file);
+
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting/"),
+      false
+    );
+  });
+});
+
+//loadFiles()
+describe("Tests `loadFiles()`:", () => {
+  it("Correctly returns the files of a directory in a string array", () => {
+    expect(storage.loadFiles("./test/pathTesting")).to.include.members([
+      "deleteTest.txt",
+      "nested",
+      "test1.txt",
+      "test2.txt",
+    ]);
+  });
+
+  it("Correctly returns the files of a directory in a string array, skipping `.comments`", () => {
+    assert.strictEqual(createCommentsFolder("./test/pathTesting"), 0);
+
+    expect(storage.loadFiles("./test/pathTesting"))
+      .to.include.members([
+        "deleteTest.txt",
+        "nested",
+        "test1.txt",
+        "test2.txt",
+      ])
+      .does.not.include(".comments");
+  });
+});
 
 //TODO: test loadComments()
 

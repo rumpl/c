@@ -80,9 +80,12 @@ storage.deleteSingleCommentFile = function (absolutePathToTarget) {
  * @returns {boolean} true if `.comments` is present in the directory.
  * */
 storage.commentsFolderExists = function (absolutePathToTargetParent) {
+  const thePath = path.join(absolutePathToTargetParent, DIRECTORY);
+
   return (
-    storage.ifPathIsValid(path.join(absolutePathToTargetParent, DIRECTORY)) &&
-    fs.statSync(absolutePathToTargetParent).isDirectory()
+    storage.ifPathIsValid(thePath) &&
+    fs.statSync(absolutePathToTargetParent).isDirectory() &&
+    fs.statSync(thePath).isDirectory()
   );
 };
 
