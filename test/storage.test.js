@@ -13,6 +13,8 @@ const expect = require("chai").expect;
 
 const app = rewire("../src/storage.js");
 const createCommentsFolder = app.__get__("createCommentsFolder");
+const getCommentsFilePath = app.__get__("getCommentsFilePath");
+const getFileNameFromPath = app.__get__("getFileNameFromPath");
 
 //Before
 beforeEach(() => {
@@ -271,11 +273,107 @@ describe("Tests `loadFiles()`:", () => {
   });
 });
 
-//TODO: test loadComments()
+//loadComments()
+describe("Tests `loadComments()`:", () => {
+  it("Correctly reads all the comments from a directory", () => {
+    assert.strictEqual(
+      storage.setCommentFile(
+        path.resolve("./test/pathTesting/test1.txt"),
+        "test1.txt comment"
+      ),
+      0
+    );
 
-//TODO: test returnCurrentDirectoryParentComment()
+    assert.strictEqual(
+      storage.setCommentFile(
+        path.resolve("./test/pathTesting/test2.txt"),
+        "test2.txt comment"
+      ),
+      0
+    );
 
-//TODO: test returnCurrentDirectoryGrandparentComment()
+    expect(
+      Object.assign({}, storage.loadComments("./test/pathTesting"))
+    ).to.eql({
+      "test1.txt": "test1.txt comment\n",
+      "test2.txt": "test2.txt comment\n",
+    });
+  });
+});
+
+//returnCurrentDirectoryParentComment()
+describe("Tests `returnCurrentDirectoryParentComment()`:", () => {
+  it('Returns "" if the parent does not have a `.comments`', () => {
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting"),
+      false
+    );
+
+    assert.strictEqual(
+      storage.returnCurrentDirectoryParentComment("./test/pathTesting/nested"),
+      ""
+    );
+  });
+
+  it("Returns the correct comment from it's parent", () => {
+    assert.strictEqual(
+      storage.setCommentFile(
+        path.resolve("./test/pathTesting/nested"),
+        "nested comment"
+      ),
+      0
+    );
+
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting"),
+      true
+    );
+
+    assert.strictEqual(
+      storage.returnCurrentDirectoryParentComment("./test/pathTesting/nested"),
+      "[Parent] nested comment\n"
+    );
+  });
+});
+
+//returnCurrentDirectoryGrandparentComment()
+describe("Tests `returnCurrentDirectoryGrandparentComment()`:", () => {
+  it('Returns "" if the grandparent does not have a `.comments`', () => {
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting"),
+      false
+    );
+
+    assert.strictEqual(
+      storage.returnCurrentDirectoryGrandparentComment(
+        "./test/pathTesting/nested/doubleNest"
+      ),
+      ""
+    );
+  });
+
+  it("Returns the correct comment from it's grandparent", () => {
+    assert.strictEqual(
+      storage.setCommentFile(
+        path.resolve("./test/pathTesting/nested"),
+        "nested comment"
+      ),
+      0
+    );
+
+    assert.strictEqual(
+      storage.commentsFolderExists("./test/pathTesting"),
+      true
+    );
+
+    assert.strictEqual(
+      storage.returnCurrentDirectoryGrandparentComment(
+        "./test/pathTesting/nested/doubleNest"
+      ),
+      "[Grandparent] nested comment\n"
+    );
+  });
+});
 
 //IfPathIsValid()
 describe("Tests `ifPathIsValid()`: ", () => {
@@ -325,6 +423,32 @@ describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
   });
 });
 
-//TODO: test getCommentsFilePath()
+//getCommentsFilePath()
+describe("Tests `getCommentsFilePath()`:", () => {
+  it("Returns the absolute path to a given files `.comment`", () => {
+    assert.strictEqual(
+      storage.setCommentFile("./test/pathTesting/test1.txt", "wow"),
+      0
+    );
 
-//TODO: test getFileNameFromPath()
+    const absolutePathToTarget = path.resolve("./test/pathTesting/test1.txt");
+    const absolutePathToComment = path.resolve(
+      "./test/pathTesting/.comments/test1.txt.comment"
+    );
+
+    assert.strictEqual(
+      getCommentsFilePath(absolutePathToTarget),
+      absolutePathToComment
+    );
+  });
+});
+
+//getFileNameFromPath()
+describe("Tests `getFileNameFromPath()`:", () => {
+  it("Returns the last part of the file path", () => {
+    assert.strictEqual(
+      getFileNameFromPath("./test/pathTesting/test1.txt"),
+      "test1.txt"
+    );
+  });
+});

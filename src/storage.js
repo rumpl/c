@@ -93,7 +93,7 @@ storage.commentsFolderExists = function (absolutePathToTargetParent) {
  * current directory, EXCEPT `.comments` folder.
  * @param {string} filePath a valid file path. May
  * be either relative or absolute.
- * @returns An array of filenames.
+ * @returns {Array<string>} An array of filenames.
  */
 storage.loadFiles = function (filePath) {
   return fs.readdirSync(filePath).filter((file) => {
@@ -104,13 +104,13 @@ storage.loadFiles = function (filePath) {
 /**Loads the comments of all files & directories in the current directory.
  * @param {string} filePath a valid file path. May
  * be either relative or absolute.
- * @returns {array} A string array of comments.
+ * @returns {Array<string>} A string array of comments.
  */
 storage.loadComments = function (filePath) {
   let comments = [];
   const commentDir = fs.readdirSync(path.join(filePath, DIRECTORY));
 
-  commentDir.forEach(function (file) {
+  commentDir.forEach((file) => {
     comments[path.basename(file, EXTENSION)] = fs
       .readFileSync(path.join(filePath, DIRECTORY, file))
       .toString();
@@ -146,7 +146,7 @@ storage.returnCurrentDirectoryParentComment = function (filePath) {
 };
 
 /**Fetches the comment associated with the current
-directory from it's parent directory.
+directory's parent from it's grandparent directory.
  * @param {string} relativePathToTarget the relative path from the 
  * current directory to the target directory.
  * @returns {string} The comment associated with the directory.
