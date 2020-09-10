@@ -171,7 +171,9 @@ commands.delete = function (relativePathToTarget) {
     return 1;
   } else {
     console.log(
-      `${colors.cyan(relativePathToTarget)}'s comment was deleted successfully.`
+      `${colors.cyan(
+        relativePathToTarget
+      )}'s associated comment was deleted successfully.`
     );
     return 0;
   }

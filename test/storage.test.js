@@ -1,8 +1,5 @@
 // @ts-nocheck
-/* For testing no exported functions, see https://bit.ly/3jSFQ8s */
 /* Capturing console logs, see https://glebbahmutov.com/blog/capture-all-the-logs/ */
-/* Writing tests, see 
-https://codeburst.io/how-to-test-javascript-with-mocha-the-basics-80132324752e */
 
 const storage = require("../src/storage");
 const rewire = require("rewire");
