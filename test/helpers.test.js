@@ -81,7 +81,8 @@ beforeEach(() => {
   }
 });
 
-//TODO: test print()
+//print()
+describe("Tests `print()`:" )
 
 //printFileComments()
 describe("Tests `printFileComments()`:", () => {
