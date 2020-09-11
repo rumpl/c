@@ -69,8 +69,8 @@ helpers.printFileComments = function (
   const maxLine = maxLength(fileNames);
 
   //For each file run the print function
-  fileNames.forEach(function (file) {
-    print(file, comments[file], maxLine, relativePathToTarget);
+  fileNames.forEach((fileName) => {
+    print(fileName, comments[fileName], maxLine, relativePathToTarget);
   });
 };
 

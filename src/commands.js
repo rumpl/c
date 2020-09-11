@@ -34,19 +34,19 @@ commands.list = function (relativePathToTarget) {
     return 1;
   }
 
-  let comments, filesNames;
+  let comments, fileNames;
 
   //If there is not a '.comments', pass in an empty array
   if (storage.commentsFolderExists(relativePathToTarget)) {
     comments = storage.loadComments(relativePathToTarget);
-    filesNames = storage.loadFiles(relativePathToTarget);
+    fileNames = storage.loadFiles(relativePathToTarget);
   } else {
     comments = [];
-    filesNames = storage.loadFiles(relativePathToTarget);
+    fileNames = storage.loadFiles(relativePathToTarget);
   }
 
-  filesNames.unshift("..");
-  filesNames.unshift(".");
+  fileNames.unshift("..");
+  fileNames.unshift(".");
 
   /*If the current directory has no comment for itself, 
     look for one in the parent directory.*/
@@ -65,7 +65,7 @@ commands.list = function (relativePathToTarget) {
   }
 
   //Prints the files and their comments.
-  helpers.printFileComments(filesNames, comments, relativePathToTarget);
+  helpers.printFileComments(fileNames, comments, relativePathToTarget);
 
   return 0;
 };
