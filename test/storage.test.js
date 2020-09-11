@@ -88,7 +88,10 @@ describe("Tests `createCommentsFolder()`: ", () => {
     assert.strictEqual(createCommentsFolder("./test/pathTesting/"), 0);
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/.comments/"),
-      true
+      true,
+      `${storage.ifPathIsValidAndNotFile(
+        "./test/pathTesting/.comments/"
+      )} returns 'false.'`
     );
   });
 });
@@ -98,12 +101,14 @@ describe("Tests `setCommentFile()`: ", () => {
   it("Set's a `.comment` file where `.comments` doesn't exists", () => {
     assert.strictEqual(
       storage.setCommentFile("./test/pathTesting/test1.txt", "demo"),
-      0
+      0,
+      `${storage.setCommentFile("./test/pathTesting/test1.txt", "demo")} fails`
     );
 
     assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test1.txt.comment"),
-      true
+      true,
+      `./test/pathTesting/.comments/test1.txt.comment did not set correctly.`
     );
   });
 
@@ -112,7 +117,8 @@ describe("Tests `setCommentFile()`: ", () => {
 
     assert.strictEqual(
       storage.setCommentFile("./test/pathTesting/test2.txt", "demo"),
-      0
+      0,
+      `setCommentFile() failed.`
     );
 
     assert.strictEqual(

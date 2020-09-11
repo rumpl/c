@@ -88,7 +88,7 @@ beforeEach(() => {
 });
 
 //Allows capturing of console logs
-overwriteConsoleLog = function () {
+overwriteConsoleLog = () => {
   console.log = function () {
     const params = Array.prototype.slice.call(arguments, 1);
     const message = params.length
@@ -101,7 +101,7 @@ overwriteConsoleLog = function () {
 };
 
 //Console log is reinstated
-reinstateConsoleLog = function () {
+reinstateConsoleLog = () => {
   console.log = global.method.log;
 };
 
@@ -112,7 +112,11 @@ describe("Tests `print()`:", () => {
     print("test1.txt", "demo 1", 11, "./test/pathTesting");
     reinstateConsoleLog();
 
-    assert.strictEqual(messages[0], `test1.txt    demo 1`);
+    assert.strictEqual(
+      messages[0],
+      `test1.txt    demo 1`,
+      `${messages[0]} is not equal to ${`test1.txt    demo 1`}`
+    );
   });
 
   it("Prints a directory with correct syntax, spacing and comment", () => {
@@ -120,7 +124,11 @@ describe("Tests `print()`:", () => {
     print("nested", "dir demo", 11, "./test/pathTesting");
     reinstateConsoleLog();
 
-    assert.strictEqual(messages[0], `nested/      dir demo`);
+    assert.strictEqual(
+      messages[0],
+      `nested/      dir demo`,
+      `${messages[0]} is not equal to ${`nested/      dir demo`}`
+    );
   });
 
   it("Prints a file with correct syntax, spacing and no comment", () => {
@@ -128,7 +136,11 @@ describe("Tests `print()`:", () => {
     print("test1.txt", "", 11, "./test/pathTesting");
     reinstateConsoleLog();
 
-    assert.strictEqual(messages[0], `test1.txt    `);
+    assert.strictEqual(
+      messages[0],
+      `test1.txt    `,
+      `${messages[0]} is not equal to ${`test1.txt    `}`
+    );
   });
 
   it("Prints a directory with correct syntax, spacing and no comment", () => {
@@ -136,13 +148,17 @@ describe("Tests `print()`:", () => {
     print("nested", "", 11, "./test/pathTesting");
     reinstateConsoleLog();
 
-    assert.strictEqual(messages[0], `nested/      `);
+    assert.strictEqual(
+      messages[0],
+      `nested/      `,
+      `${messages[0]} is not equal to ${`nested/      `}`
+    );
   });
 });
 
 //printFileComments()
 describe("Tests `printFileComments()`:", () => {
-  it("Every line is formatted correctly", () => {
+  it("Every line contains the correct filename", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
@@ -155,43 +171,22 @@ describe("Tests `printFileComments()`:", () => {
     //Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
-    //Regex's out \n from comments
-    for (let i = 0; i < fileNames.length; i++) {
-      if (comments[fileNames[i]]) {
-        comments[fileNames[i]] = comments[fileNames[i]].replace(
-          /\r?\n|\r/g,
-          ""
-        );
-      }
-    }
-
     overwriteConsoleLog();
     helpers.printFileComments(fileNames, comments, "./test/pathTesting");
     reinstateConsoleLog();
 
-    for (let i = 0; i < messages.length; i++) {
-      let spaces = findMaxLengthOfArrayMember(fileNames) - fileNames[i].length;
-
-      let backSlash = "  ";
+    for (let i = 0; i < fileNames.length; i++) {
+      let slash = "";
       if (fs.statSync(`./test/pathTesting/${fileNames[i]}`).isDirectory()) {
-        backSlash = "/ ";
+        slash = "/";
       }
 
-      let comment = "";
-      if (comments[fileNames[i]]) {
-        comment = comments[fileNames[i]];
-      }
-
-      let sentence = `${
-        fileNames[i] + backSlash + " ".repeat(spaces) + comment
-      }`;
-
-      assert.strictEqual(messages[i].includes(sentence), true);
+      assert.strictEqual(
+        messages[i].includes(fileNames[i] + slash),
+        true,
+        `${messages[i]} does not contain ${fileNames[i] + slash}`
+      );
     }
-  });
-
-  it("Every line contains the correct filename", () => {
-    /*TODO*/
   });
 
   it("Every line contains the correct amount of spaces", () => {
@@ -219,19 +214,58 @@ describe("Tests `printFileComments()`:", () => {
         extraSpace = 1;
       }
 
-      if (comments[fileNames[i]]) {
-        assert.strictEqual(
-          messages[i].includes(
-            " ".repeat(maxLineLength - fileNames[i].length + extraSpace)
-          ),
-          true
-        );
-      }
+      assert.strictEqual(
+        messages[i].includes(
+          " ".repeat(maxLineLength - fileNames[i].length + extraSpace)
+        ),
+        true,
+        `${messages[i]} does not have ${
+          maxLineLength - fileNames[i].length + extraSpace
+        } amount of spacing.`
+      );
     }
   });
 
   it("Every line contains the correct comment", () => {
-    /*TODO*/
+    storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
+    storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
+    storage.setCommentFile("./test/pathTesting/nested", "demo nested");
+
+    //Gets the fileNames array, adds in current and parent directories
+    const fileNames = storage.loadFiles("./test/pathTesting");
+    fileNames.unshift("..");
+    fileNames.unshift(".");
+
+    //Gets the comments object
+    let comments = storage.loadComments("./test/pathTesting");
+
+    overwriteConsoleLog();
+    helpers.printFileComments(fileNames, comments, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    for (let i = 0; i < fileNames.length; i++) {
+      //Regex's out the new line characters
+      if (comments[fileNames[i]]) {
+        comments[fileNames[i]] = comments[fileNames[i]].replace(
+          /\r?\n|\r/g,
+          ""
+        );
+      }
+
+      if (comments[fileNames[i]]) {
+        assert.strictEqual(
+          messages[i].includes(comments[fileNames[i]]),
+          true,
+          `${comments[fileNames[i]]} is not contained within ${messages[i]}.`
+        );
+      } else {
+        assert.strictEqual(
+          messages[i].includes(comments[fileNames[i]]),
+          false,
+          `${comments[fileNames[i]]} is contained within ${messages[i]}.`
+        );
+      }
+    }
   });
 });
 
@@ -241,6 +275,7 @@ describe("Tests `printFileComments()`:", () => {
 describe("Tests `maxLength()`:", () => {
   it("Returns the int length of the longest filename in an array", () => {
     assert.strictEqual(
+      //the return value of the function
       findMaxLengthOfArrayMember([
         "",
         "1",
@@ -249,18 +284,35 @@ describe("Tests `maxLength()`:", () => {
         "incredibly massively long",
         "by far the longest string in this entire array",
       ]),
-      "by far the longest string in this entire array".length
+      //the length of the longest string
+      "by far the longest string in this entire array".length,
+      //error message
+      `the method returned the value ${findMaxLengthOfArrayMember([
+        "",
+        "1",
+        "four",
+        "123456789",
+        "incredibly massively long",
+        "by far the longest string in this entire array",
+      ])} not ${"by far the longest string in this entire array".length}`
     );
   });
 
   it("Returns 0 when given an empty array", () => {
-    assert.strictEqual(findMaxLengthOfArrayMember([]), 0);
+    assert.strictEqual(
+      findMaxLengthOfArrayMember([]),
+      0,
+      `The function returned ${findMaxLengthOfArrayMember([])}`
+    );
   });
 
   it("When given a single string, returns the length of that string", () => {
     assert.strictEqual(
       findMaxLengthOfArrayMember(["five+four"]),
-      "five+four".length
+      "five+four".length,
+      `The function returned ${findMaxLengthOfArrayMember(["five+four"])} not ${
+        "five+four".length
+      }`
     );
   });
 });
