@@ -23,10 +23,10 @@ const PADDING = " ";
  * @param {string} comment The comment for the node.
  * @param {number} maxLength The length of the
  * longest node name in the specified directory.
- * @param {string} dir the relative filepath to a
- * directory, the contents of which will be listed.
+ * @param {string} relativeFilePathToTarget the 
+ * relative filepath to the target file or directory.
  */
-function print(fileName, comment, maxLength, dir) {
+function print(fileName, comment, maxLength, relativeFilePathToTarget) {
   comment = comment || "";
   //Removes any new lines with blank spaces.
   comment = comment.replace(/(\r\n|\n|\r)/gm, " ");
@@ -34,7 +34,7 @@ function print(fileName, comment, maxLength, dir) {
 
   /*The amount of spacing & the colouring changes 
   depending on whether 'file' is a file or a directory*/
-  if (fs.statSync(dir + "/" + fileName).isFile()) {
+  if (fs.statSync(relativeFilePathToTarget + "/" + fileName).isFile()) {
     pad = PADDING.repeat(maxLength - fileName.length + SPACING);
     console.log(
       // @ts-ignore - TS compiler throws an unnecessary error.
@@ -66,7 +66,7 @@ helpers.printFileComments = function (
   comments,
   relativePathToTarget
 ) {
-  const maxLine = maxLength(fileNames);
+  const maxLine = findMaxLengthOfArrayMember(fileNames);
 
   //For each file run the print function
   fileNames.forEach((fileName) => {
@@ -89,7 +89,7 @@ helpers.printOnlyComments = function (
   relativePathToTarget
 ) {
   //the length of longest file name
-  const maxLine = maxLength(filesNames);
+  const maxLine = findMaxLengthOfArrayMember(filesNames);
 
   //For each file with a comment, run the print function.
   filesNames.forEach(function (file) {
@@ -103,7 +103,7 @@ helpers.printOnlyComments = function (
  * specified directory.
  * @returns {number} Returns the length of the longest name in the array.
  */
-function maxLength(files) {
+function findMaxLengthOfArrayMember(files) {
   return files.reduce((a, b) => {
     return b.length > a ? b.length : a;
   }, 0);

@@ -13,11 +13,17 @@ const util = require("util");
 const { stripColors } = require("colors/safe");
 
 const app = rewire("../src/helpers.js");
-const maxLength = app.__get__("maxLength");
+const findMaxLengthOfArrayMember = app.__get__("findMaxLengthOfArrayMember");
 const print = app.__get__("print");
+
+global.method = { log: console.log };
+let messages = [];
 
 //Before
 beforeEach(() => {
+  //Reset messages
+  messages = [];
+
   //If pathTesting/ does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/")) {
     fs.mkdirSync("./test/pathTesting/", "0755");
@@ -81,22 +87,72 @@ beforeEach(() => {
   }
 });
 
+//Allows capturing of console logs
+overwriteConsoleLog = function () {
+  console.log = function () {
+    const params = Array.prototype.slice.call(arguments, 1);
+    const message = params.length
+      ? util.format(arguments[0], ...params)
+      : arguments[0];
+
+    //Strips colour coding from members
+    messages.push(stripColors(message));
+  };
+};
+
+//Console log is reinstated
+reinstateConsoleLog = function () {
+  console.log = global.method.log;
+};
+
 //print()
-describe("Tests `print()`:" )
+describe("Tests `print()`:", () => {
+  it("Prints a file with correct syntax, spacing and comment", () => {
+    overwriteConsoleLog();
+    print("test1.txt", "demo 1", 11, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    assert.strictEqual(messages[0], `test1.txt    demo 1`);
+  });
+
+  it("Prints a directory with correct syntax, spacing and comment", () => {
+    overwriteConsoleLog();
+    print("nested", "dir demo", 11, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    assert.strictEqual(messages[0], `nested/      dir demo`);
+  });
+
+  it("Prints a file with correct syntax, spacing and no comment", () => {
+    overwriteConsoleLog();
+    print("test1.txt", "", 11, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    assert.strictEqual(messages[0], `test1.txt    `);
+  });
+
+  it("Prints a directory with correct syntax, spacing and no comment", () => {
+    overwriteConsoleLog();
+    print("nested", "", 11, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    assert.strictEqual(messages[0], `nested/      `);
+  });
+});
 
 //printFileComments()
 describe("Tests `printFileComments()`:", () => {
-  it("Prints in the correct format", () => {
+  it("Every line is formatted correctly", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
 
-    //Spoofs the fileNames array, adds in current and parent directories
+    //Gets the fileNames array, adds in current and parent directories
     const fileNames = storage.loadFiles("./test/pathTesting");
     fileNames.unshift("..");
     fileNames.unshift(".");
 
-    //spoof the comments object
+    //Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
     //Regex's out \n from comments
@@ -109,30 +165,12 @@ describe("Tests `printFileComments()`:", () => {
       }
     }
 
-    //Save the original console.log
-    let messages = [];
-    global.method = {};
-    global.method.log = console.log;
-
-    //Capture all console logs in "messages"
-    console.log = function () {
-      const params = Array.prototype.slice.call(arguments, 1);
-      const message = params.length
-        ? util.format(arguments[0], ...params)
-        : arguments[0];
-
-      //Strips colour coding from members
-      messages.push(stripColors(message));
-    };
-
-    //each line of console.log is pushed into "messages"
+    overwriteConsoleLog();
     helpers.printFileComments(fileNames, comments, "./test/pathTesting");
-
-    //Console log is reinstated
-    console.log = global.method.log;
+    reinstateConsoleLog();
 
     for (let i = 0; i < messages.length; i++) {
-      let spaces = maxLength(fileNames) - fileNames[i].length;
+      let spaces = findMaxLengthOfArrayMember(fileNames) - fileNames[i].length;
 
       let backSlash = "  ";
       if (fs.statSync(`./test/pathTesting/${fileNames[i]}`).isDirectory()) {
@@ -151,6 +189,50 @@ describe("Tests `printFileComments()`:", () => {
       assert.strictEqual(messages[i].includes(sentence), true);
     }
   });
+
+  it("Every line contains the correct filename", () => {
+    /*TODO*/
+  });
+
+  it("Every line contains the correct amount of spaces", () => {
+    storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
+    storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
+    storage.setCommentFile("./test/pathTesting/nested", "demo nested");
+
+    //Gets the fileNames array, adds in current and parent directories
+    const fileNames = storage.loadFiles("./test/pathTesting");
+    fileNames.unshift("..");
+    fileNames.unshift(".");
+
+    //Gets the comments object
+    let comments = storage.loadComments("./test/pathTesting");
+
+    overwriteConsoleLog();
+    helpers.printFileComments(fileNames, comments, "./test/pathTesting");
+    reinstateConsoleLog();
+
+    const maxLineLength = findMaxLengthOfArrayMember(fileNames);
+
+    for (let i = 0; i < fileNames.length; i++) {
+      let extraSpace = 2;
+      if (fs.statSync(`./test/pathTesting/${fileNames[i]}`).isDirectory()) {
+        extraSpace = 1;
+      }
+
+      if (comments[fileNames[i]]) {
+        assert.strictEqual(
+          messages[i].includes(
+            " ".repeat(maxLineLength - fileNames[i].length + extraSpace)
+          ),
+          true
+        );
+      }
+    }
+  });
+
+  it("Every line contains the correct comment", () => {
+    /*TODO*/
+  });
 });
 
 //TODO: test printOnlyComments()
@@ -159,7 +241,7 @@ describe("Tests `printFileComments()`:", () => {
 describe("Tests `maxLength()`:", () => {
   it("Returns the int length of the longest filename in an array", () => {
     assert.strictEqual(
-      maxLength([
+      findMaxLengthOfArrayMember([
         "",
         "1",
         "four",
@@ -172,10 +254,13 @@ describe("Tests `maxLength()`:", () => {
   });
 
   it("Returns 0 when given an empty array", () => {
-    assert.strictEqual(maxLength([]), 0);
+    assert.strictEqual(findMaxLengthOfArrayMember([]), 0);
   });
 
   it("When given a single string, returns the length of that string", () => {
-    assert.strictEqual(maxLength(["five+four"]), "five+four".length);
+    assert.strictEqual(
+      findMaxLengthOfArrayMember(["five+four"]),
+      "five+four".length
+    );
   });
 });

@@ -374,14 +374,14 @@ describe("Tests `returnCurrentDirectoryGrandparentComment()`:", () => {
 
 //IfPathIsValid()
 describe("Tests `ifPathIsValid()`: ", () => {
-  it("returns false with an invalid path", () => {
+  it("Returns false with an invalid path", () => {
     assert.strictEqual(
       storage.ifPathIsValid("./fakePath/fakeFile.fake"),
       false
     );
   });
 
-  it("returns true with a valid path", () => {
+  it("Returns true with a valid path", () => {
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/"),
       true
@@ -391,28 +391,28 @@ describe("Tests `ifPathIsValid()`: ", () => {
 
 //ifPathIsValidAndNotFile()
 describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
-  it("returns false with an invalid non-file path", () => {
+  it("Returns false with an invalid non-file path", () => {
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./fakePath/fakeFile.fake"),
       false
     );
   });
 
-  it("returns false with an invalid file path", () => {
+  it("Returns false with an invalid file path", () => {
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./fakePath/fakerPath/"),
       false
     );
   });
 
-  it("returns false with a valid file path", () => {
+  it("Returns false with a valid file path", () => {
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/test1.txt"),
       false
     );
   });
 
-  it("returns true with a valid non-file path", () => {
+  it("Returns true with a valid non-file path", () => {
     assert.strictEqual(
       storage.ifPathIsValidAndNotFile("./test/pathTesting/"),
       true
