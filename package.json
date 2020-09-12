@@ -37,11 +37,11 @@
     "pre-push-message": "echo '🧪 Running pre-commit checks...' && exit 0",
     "post-push-message-success": "echo '🎉 Checks successfully! Pushing...' && exit 0",
     "post-push-message-fail": "echo '😢 Checks failed.' && exit 1",
-    "pre-push": "mocha && npm run post-push-message-success || npm run post-push-message-fail"
+    "pre-push-event": "mocha && npm run post-push-message-success || npm run post-push-message-fail"
   },
   "pre-push": [
     "pre-push-message",
-    "pre-push"
+    "pre-push-event"
   ],
   "dependencies": {
     "colors": "1.4.0",
