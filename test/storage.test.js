@@ -123,7 +123,8 @@ describe("Tests `setCommentFile()`: ", () => {
 
     assert.strictEqual(
       fs.existsSync("./test/pathTesting/.comments/test2.txt.comment"),
-      true
+      true,
+      `The file's comment does not exist.`
     );
   });
 
