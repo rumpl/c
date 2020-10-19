@@ -23,7 +23,7 @@ const PADDING = " ";
  * @param {string} comment The comment for the node.
  * @param {number} maxLength The length of the
  * longest node name in the specified directory.
- * @param {string} relativeFilePathToTarget the 
+ * @param {string} relativeFilePathToTarget the
  * relative filepath to the target file or directory.
  */
 function print(fileName, comment, maxLength, relativeFilePathToTarget) {
@@ -49,7 +49,7 @@ function print(fileName, comment, maxLength, relativeFilePathToTarget) {
   }
 }
 
-/*TODO: refactor printFileComments & printOnlyComments 
+/* TODO: refactor printFileComments & printOnlyComments 
 into one function - they're almost identical for the most part*/
 
 /**Prints all of the files and sub-directories of a specified
