@@ -7,8 +7,6 @@ const storage = require("../src/storage");
 const rewire = require("rewire");
 const assert = require("assert");
 const fs = require("fs");
-const path = require("path");
-const expect = require("chai").expect;
 const util = require("util");
 const { stripColors } = require("colors/safe");
 
@@ -156,8 +154,8 @@ describe("Tests `print()`:", () => {
   });
 });
 
-//printFileComments()
-describe("Tests `printFileComments()`:", () => {
+//printAllComments()
+describe("Tests `printAllComments()` with unfiltered output:", () => {
   it("Every line contains the correct filename", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
@@ -172,7 +170,7 @@ describe("Tests `printFileComments()`:", () => {
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
-    helpers.printFileComments(fileNames, comments, "./test/pathTesting");
+    helpers.printAllComments(fileNames, comments, "./test/pathTesting", false);
     reinstateConsoleLog();
 
     for (let i = 0; i < fileNames.length; i++) {
@@ -203,7 +201,7 @@ describe("Tests `printFileComments()`:", () => {
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
-    helpers.printFileComments(fileNames, comments, "./test/pathTesting");
+    helpers.printAllComments(fileNames, comments, "./test/pathTesting", false);
     reinstateConsoleLog();
 
     const maxLineLength = findMaxLengthOfArrayMember(fileNames);
@@ -240,7 +238,7 @@ describe("Tests `printFileComments()`:", () => {
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
-    helpers.printFileComments(fileNames, comments, "./test/pathTesting");
+    helpers.printAllComments(fileNames, comments, "./test/pathTesting", false);
     reinstateConsoleLog();
 
     for (let i = 0; i < fileNames.length; i++) {
@@ -269,131 +267,7 @@ describe("Tests `printFileComments()`:", () => {
   });
 });
 
-//printOnlyComments()
-describe("Tests `printOnlyComments()`:", () => {
-  it("Every line contains the correct filename", () => {
-    storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
-    storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
-    storage.setCommentFile("./test/pathTesting/nested", "demo nested");
-
-    //Gets the fileNames array, adds in current and parent directories
-    const fileNames = storage.loadFiles("./test/pathTesting");
-    fileNames.unshift("..");
-    fileNames.unshift(".");
-
-    //Gets the comments object
-    let comments = storage.loadComments("./test/pathTesting");
-
-    overwriteConsoleLog();
-    helpers.printOnlyComments(fileNames, comments, "./test/pathTesting");
-    reinstateConsoleLog();
-
-    for (let i, j = 0; i < fileNames.length; i++) {
-      let slash = "";
-      if (fs.statSync(`./test/pathTesting/${fileNames[i]}`).isDirectory()) {
-        slash = "/";
-      }
-
-      console.log(`Messages: ${messages[i]}`);
-      console.log(`FileNames + slash: ${fileNames[i] + slash}`);
-
-      if (comments[fileNames[i]]) {
-        assert.strictEqual(
-          messages[j].includes(fileNames[i] + slash),
-          true,
-          `${messages[j]} does not contain ${fileNames[i] + slash}`
-        );
-
-        j++;
-      }
-    }
-  });
-
-  it("Every line contains the correct amount of spaces", () => {
-    storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
-    storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
-    storage.setCommentFile("./test/pathTesting/nested", "demo nested");
-
-    //Gets the fileNames array, adds in current and parent directories
-    const fileNames = storage.loadFiles("./test/pathTesting");
-    fileNames.unshift("..");
-    fileNames.unshift(".");
-
-    //Gets the comments object
-    let comments = storage.loadComments("./test/pathTesting");
-
-    overwriteConsoleLog();
-    helpers.printOnlyComments(fileNames, comments, "./test/pathTesting");
-    reinstateConsoleLog();
-
-    const maxLineLength = findMaxLengthOfArrayMember(fileNames);
-
-    for (let i, j = 0; i < fileNames.length; i++) {
-      let extraSpace = 2;
-      if (fs.statSync(`./test/pathTesting/${fileNames[i]}`).isDirectory()) {
-        extraSpace = 1;
-      }
-
-      if (comments[FileNames[i]]) {
-        assert.strictEqual(
-          messages[j].includes(
-            " ".repeat(maxLineLength - fileNames[i].length + extraSpace)
-          ),
-          true,
-          `${messages[j]} does not have ${
-            maxLineLength - fileNames[i].length + extraSpace
-          } amount of spacing.`
-        );
-
-        j++;
-      }
-    }
-  });
-
-  it("Every line contains the correct comment", () => {
-    storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
-    storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
-    storage.setCommentFile("./test/pathTesting/nested", "demo nested");
-
-    //Gets the fileNames array, adds in current and parent directories
-    const fileNames = storage.loadFiles("./test/pathTesting");
-    fileNames.unshift("..");
-    fileNames.unshift(".");
-
-    //Gets the comments object
-    let comments = storage.loadComments("./test/pathTesting");
-
-    overwriteConsoleLog();
-    helpers.printOnlyComments(fileNames, comments, "./test/pathTesting");
-    reinstateConsoleLog();
-
-    for (let i, j = 0; i < fileNames.length; i++) {
-      //Regex's out the new line characters
-      if (comments[fileNames[i]]) {
-        comments[fileNames[i]] = comments[fileNames[i]].replace(
-          /\r?\n|\r/g,
-          ""
-        );
-      }
-
-      if (comments[fileNames[i]]) {
-        assert.strictEqual(
-          messages[j].includes(comments[fileNames[i]]),
-          true,
-          `${comments[fileNames[i]]} is not contained within ${messages[j]}.`
-        );
-
-        j++;
-      } else {
-        assert.strictEqual(
-          messages[i].includes(comments[fileNames[i]]),
-          false,
-          `${comments[fileNames[i]]} is contained within ${messages[i]}.`
-        );
-      }
-    }
-  });
-
+describe("Tests `printAllComments()` with filtered output:", () => {
   it("If a line does not have a comment, it is not printed", () => {
     //Set's 3 comments
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
@@ -410,7 +284,7 @@ describe("Tests `printOnlyComments()`:", () => {
 
     //Captures console logging
     overwriteConsoleLog();
-    helpers.printOnlyComments(fileNames, comments, "./test/pathTesting");
+    helpers.printAllComments(fileNames, comments, "./test/pathTesting", true);
     reinstateConsoleLog();
 
     let size = 0;

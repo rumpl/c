@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * c
- * https://github.com/rumpl/c
- *
- * Copyright (c) 2012 Djordje Lukic
- * Licensed under the MIT license.
+ * @file The entry point for the program `c.` Outlines how commands should
+ * be structured and parsed.
+ * @author Djordje Lukic
+ * {@link https://github.com/rumpl/c|Remote repository}
+ * @copyright Copyright (c) 2012 Djordje Lukic
+ * @license MIT
  */
 
 "use strict";
@@ -14,41 +15,31 @@ const colors = require("colors/safe");
 
 const [, , ...arg] = process.argv; //Gets command line arguments
 
-/** Creates objects - commands - which can be called from the command line. */
+/** Defines a type of object which encapsulates all the data needed to parse
+ * and execute an argument for the program `c` which may passed to the command
+ * line.
+ * @class 
+ *  @param {string} shortFlag a short-form identifier for a command,
+ * beginning with '-'.
+ * @param {string} action a long-form identifier for a command.
+ * @param {number} argCount the number of arguments the command takes.
+ * @param {{ (): void; }} method the function, from the file `commands.js`,
+ * which executes this commands main logic.
+ * @param {{ (): void; (): never;  }} fallback a fallback function which is
+ * used if the number of arguments is equal to argCount - 1.
+ */
 class Command {
-  /**
-   * @param {string} shortFlag a short-form identifier for a command,
-   * beginning with '-'.
-   * @param {string} action a long-form identifier for a command.
-   * @param {number} argCount the number of arguments the command takes.
-   * @param {{ (): void; }} method the function, from the file `commands.js`,
-   * which executes this commands main logic.
-   * @param {{ (): void; (): never;  }} fallback a fallback function which is
-   * used if the number of arguments is equal to argCount - 1.
-   */
   constructor(shortFlag, action, argCount, method, fallback) {
-    /** @property {string} shortFlag a short-form identifier for a command,
-     * beginning with '-'. */
     this.shortFlag = shortFlag;
-
-    /** @property {string} action a long-form identifier for a command. */
     this.action = action;
-
-    /** @property {number} argCount the number
-     * of arguments the command takes.*/
     this.argCount = argCount;
-
-    /** @property {{ (): void; }} method the function, from the file
-     * `commands.js`, which executes this commands main logic. */
     this.method = method;
-
-    /** @property {{ (): void; (): never;  }} fallback a fallback function
-     * which is used if the number of arguments is equal to argCount - 1. */
     this.fallback = fallback;
   }
 }
 
-/**An array storing all command objects.*/
+/** An array storing all of the Command objects.
+ */
 const commands = [
   new Command( //Help command
     "-h",
@@ -69,15 +60,29 @@ const commands = [
     "list",
     2,
     () => {
-      commandFunctions.list(arg[1]);
+      commandFunctions.list(arg[1], false);
       process.exit(0);
     },
     () => {
-      commandFunctions.list(".");
+      commandFunctions.list(".", false);
       process.exit(0);
     }
   ),
 
+  new Command( //filtered list command
+    "-fl",
+    "filter",
+    2,
+    () => {
+      commandFunctions.list(arg[1], true);
+      process.exit(0);
+    },
+    () => {
+      commandFunctions.list(".", true);
+      process.exit(0);
+    }
+  ),
+  
   new Command( //remove command
     "-rm",
     "remove",
@@ -119,10 +124,11 @@ const commands = [
       process.exit(1);
     }
   ),
+
 ];
 
-/*Loops through each element of `commands` to 
-find what command was provided at the command line*/
+// Loops through each element of `commands` to
+// find what command was provided at the command line
 for (const command of commands) {
   if (arg[0] == command.action || arg[0] == command.shortFlag) {
     switch (arg.length) {

@@ -1,12 +1,10 @@
-/**This file contains functions related to checking for, adding
- * and deleting .comment` files and `.comments` directories.*/
-
-/*
- * c
- * https://github.com/rumpl/c
- *
- * Copyright (c) 2012 Djordje Lukic
- * Licensed under the MIT license.
+/**
+ * @file This file contains functions related to checking for, adding,
+ * and deleting .comment` files and `.comments` directories.
+ * @author Djordje Lukic
+ * {@link https://github.com/rumpl/c|Remote repository}
+ * @copyright Copyright (c) 2012 Djordje Lukic
+ * @license MIT
  */
 
 "use strict";

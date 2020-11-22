@@ -1,11 +1,9 @@
-//!Defines the commands used in cli.
-
-/*
- * c
- * https://github.com/rumpl/c
- *
- * Copyright (c) 2012 Djordje Lukic
- * Licensed under the MIT license.
+/**
+ * @file Defines functions used for handling the commands.
+ * @author Djordje Lukic
+ * {@link https://github.com/rumpl/c|Remote repository}
+ * @copyright Copyright (c) 2012 Djordje Lukic
+ * @license MIT
  */
 
 "use strict";
@@ -16,18 +14,20 @@ const helpers = require("./helpers");
 const storage = require("./storage");
 const path = require("path");
 const colors = require("colors/safe");
+// Returns the true case of the path - necessary for *Nix based systems.
 const { trueCasePathSync } = require("true-case-path");
 
 const commands = module.exports;
 
-//TODO: refactor list & filteredList into one function - they're almost identical for the most part
-
 /**Lists all `.comment` files available within `.comments`.
  * @param {string} relativePathToTarget The relative path from the
  * current directory to the target directory.
+ * @param {boolean} filtered indicates whether the function should perform
+ * filtered printing (true) or un-filtered printing (false), where filtered
+ * printing prints only files with associated comments.
  * @return {number} error code.
  */
-commands.list = function (relativePathToTarget) {
+commands.list = function (relativePathToTarget, filtered) {
   //Checks if the path is invalid OR a directory - returns if so.
   if (!storage.ifPathIsValidAndNotFile(relativePathToTarget)) {
     console.error("Please specify a valid directory.");
@@ -45,6 +45,7 @@ commands.list = function (relativePathToTarget) {
     fileNames = storage.loadFiles(relativePathToTarget);
   }
 
+  // Adds the current and parent directory to the file names array.
   fileNames.unshift("..");
   fileNames.unshift(".");
 
@@ -65,49 +66,7 @@ commands.list = function (relativePathToTarget) {
   }
 
   //Prints the files and their comments.
-  helpers.printFileComments(fileNames, comments, relativePathToTarget);
-
-  return 0;
-};
-
-/**Lists only files with related `.comment` files.
- * @param {string} relativePathToTarget The relative path of the
- * node to list the contents of `.comments` directory.
- * @return {number} error code.
- */
-commands.filteredList = function (relativePathToTarget) {
-  if (!storage.ifPathIsValidAndNotFile(relativePathToTarget)) {
-    console.error("Please specify a valid directory.");
-    return 1;
-  }
-
-  let comments, fileNames;
-
-  if (!storage.commentsFolderExists(relativePathToTarget)) {
-    comments = [];
-    fileNames = storage.loadFiles(relativePathToTarget);
-  } else {
-    fileNames = storage.loadFiles(relativePathToTarget);
-    comments = storage.loadComments(relativePathToTarget);
-  }
-
-  /*If the current directory has no comment for itself, 
-    look for one in the parent directory.*/
-  if (!comments["."]) {
-    comments["."] = storage.returnCurrentDirectoryParentComment(
-      relativePathToTarget
-    );
-  }
-
-  /*If the current directory has no comment for it's parent,
-  look for one in the grandparent directory.*/
-  if (!comments[".."]) {
-    comments[".."] = storage.returnCurrentDirectoryGrandparentComment(
-      relativePathToTarget
-    );
-  }
-
-  helpers.printOnlyComments(fileNames, comments, relativePathToTarget);
+  helpers.printAllComments(fileNames, comments, relativePathToTarget, filtered);
 
   return 0;
 };

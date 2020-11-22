@@ -1,11 +1,9 @@
-//!Defines two helper functions.
-
-/*
- * c
- * https://github.com/rumpl/c
- *
- * Copyright (c) 2012 Djordje Lukic
- * Licensed under the MIT license.
+/**
+ * @file A file for helper functions used in the codebase.
+ * @author Djordje Lukic
+ * {@link https://github.com/rumpl/c|Remote repository}
+ * @copyright Copyright (c) 2012 Djordje Lukic
+ * @license MIT
  */
 
 "use strict";
@@ -32,16 +30,15 @@ function print(fileName, comment, maxLength, relativeFilePathToTarget) {
   comment = comment.replace(/(\r\n|\n|\r)/gm, " ");
   let pad;
 
-  /*The amount of spacing & the colouring changes 
-  depending on whether 'file' is a file or a directory*/
+  //The amount of spacing & the colouring changes
+  //depending on whether 'file' is a file or a directory
   if (fs.statSync(relativeFilePathToTarget + "/" + fileName).isFile()) {
     pad = PADDING.repeat(maxLength - fileName.length + SPACING);
-    console.log(
-      // @ts-ignore - TS compiler throws an unnecessary error.
-      colors.brightGreen(fileName) + pad + colors.yellow(comment)
-    );
+    // @ts-ignore - TS compiler throws an unnecessary error.
+    console.log(colors.brightGreen(fileName) + pad + colors.yellow(comment));
   } else {
     pad = PADDING.repeat(maxLength - fileName.length + SPACING - 1);
+
     console.log(
       // @ts-ignore - TS compiler throws an unnecessary error.
       colors.brightCyan(fileName + "/") + pad + colors.yellow(comment)
@@ -49,52 +46,31 @@ function print(fileName, comment, maxLength, relativeFilePathToTarget) {
   }
 }
 
-/* TODO: refactor printFileComments & printOnlyComments 
-into one function - they're almost identical for the most part*/
-
-/**Prints all of the files and sub-directories of a specified
- * directory, as well as their assigned comments.
- * @param {Array<string>} fileNames An array of all
- * of the file names in the specified directory.
- * @param {Array<string>} comments An array of
- * all of the comments in the specified directory.
- * @param {string} relativePathToTarget the relative filepath
- * to a directory, the content of which will be listed.
+/** Prints all of the files and sub-directories of a specified directory, as
+ * well as their assigned comments.
+ * @param {Array<string>} fileNames An array of all of the file names in the
+ * specified directory.
+ * @param {Array<string>} comments An array of all of the comments in the
+ * specified directory.
+ * @param {string} relativePathToTarget the relative filepath to a directory,
+ * the content of which will be listed.
+ * @param {boolean} filtered Indicates whether filtered printing (true) or
+ * non-filtered printing (false) should be carried out. Filtered printing
+ * prints only those files which have comments.
  */
-helpers.printFileComments = function (
+helpers.printAllComments = function (
   fileNames,
   comments,
-  relativePathToTarget
+  relativePathToTarget,
+  filtered
 ) {
   const maxLine = findMaxLengthOfArrayMember(fileNames);
 
   //For each file run the print function
   fileNames.forEach((fileName) => {
-    print(fileName, comments[fileName], maxLine, relativePathToTarget);
-  });
-};
-
-/**Prints only the files and sub-directories of a specified
- * directory which have comments, as well as their assigned comments.
- * @param {Array<string>} filesNames An array of all
- *  of the file names in the specified directory.
- * @param {Array<string>} comments An array of
- * all of the comments in the specified directory.
- * @param {string} relativePathToTarget the relative filepath
- * to a directory, the content of which will be listed.
- */
-helpers.printOnlyComments = function (
-  filesNames,
-  comments,
-  relativePathToTarget
-) {
-  //the length of longest file name
-  const maxLine = findMaxLengthOfArrayMember(filesNames);
-
-  //For each file with a comment, run the print function.
-  filesNames.forEach(function (file) {
-    if (comments[file])
-      print(file, comments[file], maxLine, relativePathToTarget);
+    if ((filtered && comments[fileName]) || !filtered) {
+      print(fileName, comments[fileName], maxLine, relativePathToTarget);
+    }
   });
 };
 
