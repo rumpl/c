@@ -44,7 +44,7 @@
     "pre-push-event"
   ],
   "dependencies": {
-    "colors": "1.4.0",
+    "colors": "^1.4.0",
     "true-case-path": "^2.2.1"
   },
   "devDependencies": {
