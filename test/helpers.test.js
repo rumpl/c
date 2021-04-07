@@ -17,75 +17,9 @@ const print = app.__get__("print");
 global.method = { log: console.log };
 let messages = [];
 
-//Before
-beforeEach(() => {
-  //Reset messages
-  messages = [];
+// ! Test helpers
 
-  //If pathTesting/ does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/")) {
-    fs.mkdirSync("./test/pathTesting/", "0755");
-  }
-
-  //If pathTesting/nested does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/nested/")) {
-    fs.mkdirSync("./test/pathTesting/nested", "0755");
-  }
-
-  //If pathTesting/nested/doubleNest does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/nested/doubleNest/")) {
-    fs.mkdirSync("./test/pathTesting/nested/doubleNest/", "0755");
-  }
-
-  //If test1.txt does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/test1.txt")) {
-    let file = fs.openSync("./test/pathTesting/test1.txt", "a");
-    fs.closeSync(file);
-  }
-
-  //If test2.txt does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/test2.txt")) {
-    let file = fs.openSync("./test/pathTesting/test2.txt", "a");
-    fs.closeSync(file);
-  }
-
-  //If deleteTest.txt does not exist, make it exist
-  if (!fs.existsSync("./test/pathTesting/deleteTest.txt")) {
-    let file = fs.openSync("./test/pathTesting/deleteTest.txt", "a");
-    fs.closeSync(file);
-  }
-
-  //!If .comments/ is populated, delete it's children
-  //test1.txt.comment
-  if (fs.existsSync("./test/pathTesting/.comments/test1.txt.comment")) {
-    fs.unlinkSync("./test/pathTesting/.comments/test1.txt.comment");
-  }
-
-  //test2.txt.comment
-  if (fs.existsSync("./test/pathTesting/.comments/test2.txt.comment")) {
-    fs.unlinkSync("./test/pathTesting/.comments/test2.txt.comment");
-  }
-
-  //.comments (file)
-  if (
-    fs.existsSync("./test/pathTesting/.comments") &&
-    !fs.statSync("./test/pathTesting/.comments").isDirectory()
-  ) {
-    fs.unlinkSync("./test/pathTesting/.comments");
-  }
-
-  //nested.comment
-  if (fs.existsSync("./test/pathTesting/.comments/nested.comment")) {
-    fs.unlinkSync("./test/pathTesting/.comments/nested.comment");
-  }
-
-  //If .comments/ exists, delete it
-  if (fs.existsSync("./test/pathTesting/.comments/")) {
-    fs.rmdirSync("./test/pathTesting/.comments/");
-  }
-});
-
-//Allows capturing of console logs
+// Captures console logs - allows for testing of what is output to the terminal
 overwriteConsoleLog = () => {
   console.log = function () {
     const params = Array.prototype.slice.call(arguments, 1);
@@ -93,17 +27,82 @@ overwriteConsoleLog = () => {
       ? util.format(arguments[0], ...params)
       : arguments[0];
 
-    //Strips colour coding from members
+    // Strips colour coding from members
     messages.push(stripColors(message));
   };
 };
 
-//Console log is reinstated
+// Reinstates console log - data is no longer captured
 reinstateConsoleLog = () => {
   console.log = global.method.log;
 };
 
-//print()
+// Automatically checks if a directory doesn't exist, and creates it if not.
+autoMkdirSync = (path, readMode) => {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, readMode);
+  }
+};
+
+// Automatically checks if a file doesn't exist, and creates it if not.
+autoOpenSync = (path, readMode) => {
+  if (!fs.existsSync(path)) {
+    let file = fs.openSync(path, readMode);
+    fs.closeSync(file);
+  }
+};
+
+// Automatically checks if a directory exists, and deletes it if so
+autoUnlinkSync = (path) => {
+  if (fs.existsSync(path) && !fs.statSync(path).isDirectory()) {
+    fs.unlinkSync(path);
+  }
+};
+
+// Automatically checks if a file exists, and deletes it if so
+autoRmdirSync = (path) => {
+  if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
+    fs.rmdirSync(path);
+  }
+};
+
+// ! Test setup
+
+// Performed before each test
+beforeEach(() => {
+  // Reset messages
+  messages = [];
+
+  // If pathTesting/ does not exist, make it exist
+  autoMkdirSync("./test/pathTesting/", "0755");
+  // If pathTesting/nested does not exist, make it exist
+  autoMkdirSync("./test/pathTesting/nested/", "0755");
+  // If pathTesting/nested/doubleNest does not exist, make it exist
+  autoMkdirSync("./test/pathTesting/nested/doubleNest/", "0755");
+
+  // If test1.txt does not exist, make it exist
+  autoOpenSync("./test/pathTesting/test1.txt", "a");
+  // If test2.txt does not exist, make it exist
+  autoOpenSync("./test/pathTesting/test2.txt", "a");
+  // If deleteTest.txt does not exist, make it exist
+  autoOpenSync("./test/pathTesting/deleteTest.txt", "a");
+
+  // delete test1.txt.comment
+  autoUnlinkSync("./test/pathTesting/.comments/test1.txt.comment");
+  // delete test2.txt.comment
+  autoUnlinkSync("./test/pathTesting/.comments/test2.txt.comment");
+  // delete .comments (file)
+  autoUnlinkSync("./test/pathTesting/.comments");
+  // delete nested.comment
+  autoUnlinkSync("./test/pathTesting/.comments/nested.comment");
+
+  // If .comments/ exists, delete it
+  autoRmdirSync("./test/pathTesting/.comments/");
+});
+
+// ! Tests
+
+// print()
 describe("Tests `print()`:", () => {
   it("Prints a file with correct syntax, spacing and comment", () => {
     overwriteConsoleLog();
@@ -154,19 +153,19 @@ describe("Tests `print()`:", () => {
   });
 });
 
-//printAllComments()
+// unfiltered printAllComments()
 describe("Tests `printAllComments()` with unfiltered output:", () => {
   it("Every line contains the correct filename", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
 
-    //Gets the fileNames array, adds in current and parent directories
+    // Gets the fileNames array, adds in current and parent directories
     const fileNames = storage.loadFiles("./test/pathTesting");
     fileNames.unshift("..");
     fileNames.unshift(".");
 
-    //Gets the comments object
+    // Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
@@ -192,12 +191,12 @@ describe("Tests `printAllComments()` with unfiltered output:", () => {
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
 
-    //Gets the fileNames array, adds in current and parent directories
+    // Gets the fileNames array, adds in current and parent directories
     const fileNames = storage.loadFiles("./test/pathTesting");
     fileNames.unshift("..");
     fileNames.unshift(".");
 
-    //Gets the comments object
+    // Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
@@ -229,12 +228,12 @@ describe("Tests `printAllComments()` with unfiltered output:", () => {
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
 
-    //Gets the fileNames array, adds in current and parent directories
+    // Gets the fileNames array, adds in current and parent directories
     const fileNames = storage.loadFiles("./test/pathTesting");
     fileNames.unshift("..");
     fileNames.unshift(".");
 
-    //Gets the comments object
+    // Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
     overwriteConsoleLog();
@@ -242,7 +241,7 @@ describe("Tests `printAllComments()` with unfiltered output:", () => {
     reinstateConsoleLog();
 
     for (let i = 0; i < fileNames.length; i++) {
-      //Regex's out the new line characters
+      // Regex's out the new line characters
       if (comments[fileNames[i]]) {
         comments[fileNames[i]] = comments[fileNames[i]].replace(
           /\r?\n|\r/g,
@@ -267,35 +266,36 @@ describe("Tests `printAllComments()` with unfiltered output:", () => {
   });
 });
 
+// filtered printAllComments()
 describe("Tests `printAllComments()` with filtered output:", () => {
   it("If a line does not have a comment, it is not printed", () => {
-    //Set's 3 comments
+    // Set's 3 comments
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo 1");
     storage.setCommentFile("./test/pathTesting/test2.txt", "demo 2");
     storage.setCommentFile("./test/pathTesting/nested", "demo nested");
 
-    //Gets the fileNames array, adds in current and parent directories
+    // Gets the fileNames array, adds in current and parent directories
     const fileNames = storage.loadFiles("./test/pathTesting");
     fileNames.unshift("..");
     fileNames.unshift(".");
 
-    //Gets the comments object
+    // Gets the comments object
     let comments = storage.loadComments("./test/pathTesting");
 
-    //Captures console logging
+    // Captures console logging
     overwriteConsoleLog();
     helpers.printAllComments(fileNames, comments, "./test/pathTesting", true);
     reinstateConsoleLog();
 
     let size = 0;
 
-    //Loops through every element of comments to count it's entries
+    // Loops through every element of comments to count it's entries
     for (let i = 0; i < fileNames.length; i++) {
       if (comments[fileNames[i]]) size++;
     }
 
-    //Compares if the entries in messages is the
-    //same as the entries in the comments object
+    // Compares if the entries in messages is the
+    // same as the entries in the comments object
     assert.strictEqual(
       messages.length,
       size,
@@ -304,11 +304,11 @@ describe("Tests `printAllComments()` with filtered output:", () => {
   });
 });
 
-//maxLength()
+// maxLength()
 describe("Tests `maxLength()`:", () => {
   it("Returns the int length of the longest filename in an array", () => {
     assert.strictEqual(
-      //the return value of the function
+      // the return value of the function
       findMaxLengthOfArrayMember([
         "",
         "1",
@@ -317,9 +317,9 @@ describe("Tests `maxLength()`:", () => {
         "incredibly massively long",
         "by far the longest string in this entire array",
       ]),
-      //the length of the longest string
+      // the length of the longest string
       "by far the longest string in this entire array".length,
-      //error message
+      // error message
       `the method returned the value ${findMaxLengthOfArrayMember([
         "",
         "1",

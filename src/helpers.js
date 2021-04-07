@@ -11,9 +11,9 @@ const helpers = module.exports;
 const colors = require("colors/safe");
 const fs = require("fs");
 
-//Change this if you want more or less space between file names and comments
+// Change this if you want more or less space between file names and comments
 const SPACING = 2;
-//Change this value for what character should present your padding.
+// Change this value for what character should present your padding.
 const PADDING = " ";
 
 /**Prints a coloured node name, padding, and it's assigned comment.
@@ -26,12 +26,12 @@ const PADDING = " ";
  */
 function print(fileName, comment, maxLength, relativeFilePathToTarget) {
   comment = comment || "";
-  //Removes any new lines with blank spaces.
+  // Removes any new lines with blank spaces.
   comment = comment.replace(/(\r\n|\n|\r)/gm, " ");
   let pad;
 
-  //The amount of spacing & the colouring changes
-  //depending on whether 'file' is a file or a directory
+  // The amount of spacing & the colouring changes
+  // depending on whether 'file' is a file or a directory
   if (fs.statSync(relativeFilePathToTarget + "/" + fileName).isFile()) {
     pad = PADDING.repeat(maxLength - fileName.length + SPACING);
     // @ts-ignore - TS compiler throws an unnecessary error.
@@ -66,7 +66,7 @@ helpers.printAllComments = function (
 ) {
   const maxLine = findMaxLengthOfArrayMember(fileNames);
 
-  //For each file run the print function
+  // For each file run the print function
   fileNames.forEach((fileName) => {
     if ((filtered && comments[fileName]) || !filtered) {
       print(fileName, comments[fileName], maxLine, relativePathToTarget);

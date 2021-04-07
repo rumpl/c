@@ -28,7 +28,7 @@ const commands = module.exports;
  * @return {number} error code.
  */
 commands.list = function (relativePathToTarget, filtered) {
-  //Checks if the path is invalid OR a directory - returns if so.
+  // Checks if the path is invalid OR a directory - returns if so.
   if (!storage.ifPathIsValidAndNotFile(relativePathToTarget)) {
     console.error("Please specify a valid directory.");
     return 1;
@@ -36,7 +36,7 @@ commands.list = function (relativePathToTarget, filtered) {
 
   let comments, fileNames;
 
-  //If there is not a '.comments', pass in an empty array
+  // If there is not a '.comments', pass in an empty array
   if (storage.commentsFolderExists(relativePathToTarget)) {
     comments = storage.loadComments(relativePathToTarget);
     fileNames = storage.loadFiles(relativePathToTarget);
@@ -65,7 +65,7 @@ commands.list = function (relativePathToTarget, filtered) {
     );
   }
 
-  //Prints the files and their comments.
+  // Prints the files and their comments.
   helpers.printAllComments(fileNames, comments, relativePathToTarget, filtered);
 
   return 0;
@@ -78,7 +78,7 @@ commands.list = function (relativePathToTarget, filtered) {
  * @return {number} error code.
  */
 commands.set = function (relativePathToTarget, comment) {
-  //Checks if the file is invalid
+  // Checks if the file is invalid
   if (!storage.ifPathIsValid(relativePathToTarget)) {
     console.error("Please specify a valid directory or file.");
     return 1;
@@ -88,7 +88,7 @@ commands.set = function (relativePathToTarget, comment) {
     path.join(path.resolve("./"), relativePathToTarget)
   );
 
-  //If setting the comment file fails, log failure
+  // If setting the comment file fails, log failure
   if (
     !storage.setCommentFile(targetDirectoryAbsolutePathCaseCorrect, comment)
   ) {

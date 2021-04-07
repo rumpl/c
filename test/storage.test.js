@@ -13,53 +13,53 @@ const createCommentsFolder = app.__get__("createCommentsFolder");
 const getCommentsFilePath = app.__get__("getCommentsFilePath");
 const getFileNameFromPath = app.__get__("getFileNameFromPath");
 
-//Before
+// Before
 beforeEach(() => {
-  //If pathTesting/ does not exist, make it exist
+  // If pathTesting/ does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/")) {
     fs.mkdirSync("./test/pathTesting/", "0755");
   }
 
-  //If pathTesting/nested does not exist, make it exist
+  // If pathTesting/nested does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/nested/")) {
     fs.mkdirSync("./test/pathTesting/nested", "0755");
   }
 
-  //If pathTesting/nested/doubleNest does not exist, make it exist
+  // If pathTesting/nested/doubleNest does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/nested/doubleNest/")) {
     fs.mkdirSync("./test/pathTesting/nested/doubleNest/", "0755");
   }
 
-  //If test1.txt does not exist, make it exist
+  // If test1.txt does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/test1.txt")) {
     let file = fs.openSync("./test/pathTesting/test1.txt", "a");
     fs.closeSync(file);
   }
 
-  //If test2.txt does not exist, make it exist
+  // If test2.txt does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/test2.txt")) {
     let file = fs.openSync("./test/pathTesting/test2.txt", "a");
     fs.closeSync(file);
   }
 
-  //If deleteTest.txt does not exist, make it exist
+  // If deleteTest.txt does not exist, make it exist
   if (!fs.existsSync("./test/pathTesting/deleteTest.txt")) {
     let file = fs.openSync("./test/pathTesting/deleteTest.txt", "a");
     fs.closeSync(file);
   }
 
-  //!If .comments/ is populated, delete it's children
-  //test1.txt.comment
+  // !If .comments/ is populated, delete it's children
+  // test1.txt.comment
   if (fs.existsSync("./test/pathTesting/.comments/test1.txt.comment")) {
     fs.unlinkSync("./test/pathTesting/.comments/test1.txt.comment");
   }
 
-  //test2.txt.comment
+  // test2.txt.comment
   if (fs.existsSync("./test/pathTesting/.comments/test2.txt.comment")) {
     fs.unlinkSync("./test/pathTesting/.comments/test2.txt.comment");
   }
 
-  //.comments (file)
+  // .comments (file)
   if (
     fs.existsSync("./test/pathTesting/.comments") &&
     !fs.statSync("./test/pathTesting/.comments").isDirectory()
@@ -67,22 +67,22 @@ beforeEach(() => {
     fs.unlinkSync("./test/pathTesting/.comments");
   }
 
-  //nested.comment
+  // nested.comment
   if (fs.existsSync("./test/pathTesting/.comments/nested.comment")) {
     fs.unlinkSync("./test/pathTesting/.comments/nested.comment");
   }
 
-  //If .comments/ exists, delete it
+  // If .comments/ exists, delete it
   if (fs.existsSync("./test/pathTesting/.comments/")) {
     fs.rmdirSync("./test/pathTesting/.comments/");
   }
 });
 
-//after
+// after
 afterEach(() => {});
 
-//!TESTS
-//createCommentsFolder()
+// !TESTS
+// createCommentsFolder()
 describe("Tests `createCommentsFolder()`: ", () => {
   it("Creates a `.comments` folder in `./test/pathTesting/`", () => {
     assert.strictEqual(createCommentsFolder("./test/pathTesting/"), 0);
@@ -96,7 +96,7 @@ describe("Tests `createCommentsFolder()`: ", () => {
   });
 });
 
-//setCommentsFile()
+// setCommentsFile()
 describe("Tests `setCommentFile()`: ", () => {
   it("Set's a `.comment` file where `.comments` doesn't exists", () => {
     assert.strictEqual(
@@ -168,7 +168,7 @@ describe("Tests `setCommentFile()`: ", () => {
   });
 });
 
-//deleteSingleCommentFile()
+// deleteSingleCommentFile()
 describe("Tests `deleteSingleCommentFile()`: ", () => {
   it("Deletes a `.comment` and keeps it's `.comments`", () => {
     storage.setCommentFile("./test/pathTesting/test1.txt", "demo");
@@ -224,7 +224,7 @@ describe("Tests `deleteSingleCommentFile()`: ", () => {
   });
 });
 
-//commentsFolderExists()
+// commentsFolderExists()
 describe("Tests `commentsFolderExists()`:", () => {
   it("Returns true when given path to a `.comments` directory", () => {
     assert.strictEqual(createCommentsFolder("./test/pathTesting/"), 0);
@@ -252,7 +252,7 @@ describe("Tests `commentsFolderExists()`:", () => {
   });
 });
 
-//loadFiles()
+// loadFiles()
 describe("Tests `loadFiles()`:", () => {
   it("Correctly returns the files of a directory in a string array", () => {
     expect(storage.loadFiles("./test/pathTesting")).to.include.members([
@@ -277,7 +277,7 @@ describe("Tests `loadFiles()`:", () => {
   });
 });
 
-//loadComments()
+// loadComments()
 describe("Tests `loadComments()`:", () => {
   it("Correctly reads all the comments from a directory", () => {
     assert.strictEqual(
@@ -305,7 +305,7 @@ describe("Tests `loadComments()`:", () => {
   });
 });
 
-//returnCurrentDirectoryParentComment()
+// returnCurrentDirectoryParentComment()
 describe("Tests `returnCurrentDirectoryParentComment()`:", () => {
   it('Returns "" if the parent does not have a `.comments`', () => {
     assert.strictEqual(
@@ -340,7 +340,7 @@ describe("Tests `returnCurrentDirectoryParentComment()`:", () => {
   });
 });
 
-//returnCurrentDirectoryGrandparentComment()
+// returnCurrentDirectoryGrandparentComment()
 describe("Tests `returnCurrentDirectoryGrandparentComment()`:", () => {
   it('Returns "" if the grandparent does not have a `.comments`', () => {
     assert.strictEqual(
@@ -379,7 +379,7 @@ describe("Tests `returnCurrentDirectoryGrandparentComment()`:", () => {
   });
 });
 
-//IfPathIsValid()
+// IfPathIsValid()
 describe("Tests `ifPathIsValid()`: ", () => {
   it("Returns false with an invalid path", () => {
     assert.strictEqual(
@@ -396,7 +396,7 @@ describe("Tests `ifPathIsValid()`: ", () => {
   });
 });
 
-//ifPathIsValidAndNotFile()
+// ifPathIsValidAndNotFile()
 describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
   it("Returns false with an invalid non-file path", () => {
     assert.strictEqual(
@@ -427,7 +427,7 @@ describe("Tests `ifPathIsValidAndNotFile()`: ", () => {
   });
 });
 
-//getCommentsFilePath()
+// getCommentsFilePath()
 describe("Tests `getCommentsFilePath()`:", () => {
   it("Returns the absolute path to a given files `.comment`", () => {
     assert.strictEqual(
@@ -447,7 +447,7 @@ describe("Tests `getCommentsFilePath()`:", () => {
   });
 });
 
-//getFileNameFromPath()
+// getFileNameFromPath()
 describe("Tests `getFileNameFromPath()`:", () => {
   it("Returns the last part of the file path", () => {
     assert.strictEqual(

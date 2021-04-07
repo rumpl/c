@@ -9,12 +9,12 @@
 
 "use strict";
 
-const fs = require("fs"); //FileSystem
-const path = require("path"); //Paths
+const fs = require("fs"); // FileSystem
+const path = require("path"); // Paths
 
 const storage = module.exports;
 
-//Constants representing the directory name & file extension, respectively.
+// Constants representing the directory name & file extension, respectively.
 const DIRECTORY = ".comments";
 const EXTENSION = ".comment";
 
@@ -25,7 +25,7 @@ const EXTENSION = ".comment";
  * @returns {number} exit code.
  */
 storage.setCommentFile = function (absolutePathToTarget, comment) {
-  //Check if `.comments` exists, makes it if not.
+  // Check if `.comments` exists, makes it if not.
   if (!storage.commentsFolderExists(path.dirname(absolutePathToTarget))) {
     createCommentsFolder(path.dirname(absolutePathToTarget));
   }
@@ -54,14 +54,14 @@ storage.deleteSingleCommentFile = function (absolutePathToTarget) {
 
   const commentsFile = getCommentsFilePath(absolutePathToTarget);
 
-  //If the `file.comment` does not exist...
+  // If the `file.comment` does not exist...
   if (!storage.ifPathIsValid(commentsFile)) {
     return 1;
   }
 
   fs.unlinkSync(commentsFile);
 
-  //If the `.comments` directory is now empty...
+  // If the `.comments` directory is now empty...
   if (
     storage.loadFiles(path.join(path.dirname(absolutePathToTarget), DIRECTORY))
       .length == 0

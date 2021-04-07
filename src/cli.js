@@ -13,12 +13,12 @@
 const commandFunctions = require("./commands");
 const colors = require("colors/safe");
 
-const [, , ...arg] = process.argv; //Gets command line arguments
+const [, , ...arg] = process.argv; // Gets command line arguments
 
 /** Defines a type of object which encapsulates all the data needed to parse
  * and execute an argument for the program `c` which may passed to the command
  * line.
- * @class 
+ * @class
  *  @param {string} shortFlag a short-form identifier for a command,
  * beginning with '-'.
  * @param {string} action a long-form identifier for a command.
@@ -41,7 +41,7 @@ class Command {
 /** An array storing all of the Command objects.
  */
 const commands = [
-  new Command( //Help command
+  new Command( // Help command
     "-h",
     "help",
     1,
@@ -55,7 +55,7 @@ const commands = [
     }
   ),
 
-  new Command( //list command
+  new Command( // list command
     "-l",
     "list",
     2,
@@ -69,7 +69,7 @@ const commands = [
     }
   ),
 
-  new Command( //filtered list command
+  new Command( // filtered list command
     "-fl",
     "filter",
     2,
@@ -82,8 +82,8 @@ const commands = [
       process.exit(0);
     }
   ),
-  
-  new Command( //remove command
+
+  new Command( // remove command
     "-rm",
     "remove",
     2,
@@ -97,7 +97,7 @@ const commands = [
     }
   ),
 
-  new Command( //set command
+  new Command( // set command
     "-s",
     "set",
     3,
@@ -111,7 +111,7 @@ const commands = [
     }
   ),
 
-  new Command( //Version command
+  new Command( // Version command
     "-v",
     "version",
     1,
@@ -124,7 +124,6 @@ const commands = [
       process.exit(1);
     }
   ),
-
 ];
 
 // Loops through each element of `commands` to
@@ -132,11 +131,11 @@ const commands = [
 for (const command of commands) {
   if (arg[0] == command.action || arg[0] == command.shortFlag) {
     switch (arg.length) {
-      case command.argCount: //The number of arguments specified
+      case command.argCount: // The number of arguments specified
         command.method();
         break;
 
-      case command.argCount - 1: //The number of arguments specified -1
+      case command.argCount - 1: // The number of arguments specified -1
         command.fallback();
         break;
 
@@ -153,7 +152,7 @@ error();
  */
 function error() {
   console.error(colors.red("\nInvalid flag, please try the following:\n"));
-  //Show how to use `c`
+  // Show how to use `c`
   commandFunctions.help();
 
   return 1;
